@@ -35,14 +35,14 @@
             <h3>{{ getUser.goals[currentIndex].progress  }}% Done</h3>
         </div>
         <div class="navigation-section">
-            <div class="navigation-section-item" @click="navigateTo('/Battlefield')">
+            <div class="navigation-section-item" @click="navigateTo('/AddGoal')">
                 <img src="@/assets/attack-icon.svg" alt="attack-icon">
             </div>
-            <div class="navigation-section-item" @click="navigateTo('/QuestCenter')">
+            <div class="navigation-section-item" @click="navigateTo('/AddTask')">
                 <img src="@/assets/quest-center-icon.svg" alt="quest-center-icon">
 
             </div>
-            <div class="navigation-section-item" @click="navigateTo('//MyQuest')">
+            <div class="navigation-section-item" @click="navigateTo('/MyTasks')">
                 <img src="@/assets/my-quest-icon.svg" alt="my-quest-icon">
             </div>
         </div>
