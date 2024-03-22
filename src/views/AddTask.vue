@@ -86,8 +86,10 @@ export default {
             const firestore = getFirestore();
             const userCollectionReference = collection(firestore, 'users');// Update the goals array using Firestore's arrayUnion method
             const userDoc = doc(userCollectionReference, this.getUser.uid)
+            const newTaskId = doc(userCollectionReference).id;
             await updateDoc(userDoc, {
                 tasks: arrayUnion({
+                    id: newTaskId,
                     title: this.title,
                     description:this.description,
                     goalTitle: this.getUser.goals[this.currentIndex].goalTitle,

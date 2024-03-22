@@ -5,7 +5,8 @@
             <p class="title">My Tasks</p>
         </div>
         <button @click="showingDifficulty = 'easy'" :class="{ active: showingDifficulty === 'easy' }">Easy</button>
-        <button @click="showingDifficulty = 'medium'" :class="{ active: showingDifficulty === 'medium' }">Medium</button>
+        <button @click="showingDifficulty = 'medium'"
+            :class="{ active: showingDifficulty === 'medium' }">Medium</button>
         <button @click="showingDifficulty = 'hard'" :class="{ active: showingDifficulty === 'hard' }">Hard</button>
 
         <div class="slider">
@@ -40,29 +41,56 @@
             <h3>{{ getUser.goals[currentIndex].progress }}% Done</h3>
         </div>
         <div v-if="getUser.tasks.length > 0">
-            {{ tasks }}
+            <task-card @select="selectTask" v-for="task in tasks" :key="task.id" :title="task.title"
+                :id="task.id"></task-card>
+        </div>
+        <div class="popup" v-if="selectedTask">
+                <h3 class="title">{{ selectedTask.title }}</h3>
+                <h3 class="title">{{ selectedTask.description }}</h3>
+                <img v-if="selectedTask.difficulty==='easy'" src="@/assets/easy.svg" alt="hard">
+                <img v-if="selectedTask.difficulty==='medium'" src="@/assets/medium.svg" alt="hard">
+                <img v-if="selectedTask.difficulty==='hard'" src="@/assets/hard.svg" alt="hard">
+                <button class="reject" @click="selectedId= null">CLOSE</button>
+            
         </div>
     </div>
 </template>
 
-<script>import { mapGetters } from 'vuex';
+<script>
+import { mapGetters } from 'vuex';
+import TaskCard from '@/components/Quest/TaskCard.vue';
 export default {
     name: "my-tasks",
+    components: {
+        TaskCard
+    },
     computed: {
         ...mapGetters(['getUser', 'getLoading']),
 
         tasks() {
-            return this.getUser.tasks.filter(task => task.goalTitle === this.getUser.goals[this.currentIndex].goalTitle).filter(task => task.difficulty === this.showingDifficulty)
+            return this.getUser.tasks.filter(task => task.goalTitle === this.getUser.goals[this.currentIndex].goalTitle &&
+                task.difficulty === this.showingDifficulty &&
+                !task.done)
+        },
+        doneTasks() {
+            return this.getUser.tasks.filter(task => task.done)
+        },
+        selectedTask() {
+            if (!this.selectedId)
+                return null
+            return this.tasks.filter(task => task.id === this.selectedId)[0]
         }
     },
     mounted() {
         this.totalSlides = this.getUser.goals.length
+        console.log(this.getUser.goals)
     },
     data() {
         return {
             currentIndex: 0,
             totalSlides: 0,
-            showingDifficulty: 'easy'
+            showingDifficulty: 'easy',
+            selectedId: null
         }
     },
     methods: {
@@ -75,6 +103,9 @@ export default {
         prev() {
             this.currentIndex = (this.currentIndex - 1 + this.totalSlides) % this.totalSlides;
         },
+        selectTask(id) {
+            this.selectedId = id
+        }
     },
 }
 </script>
@@ -82,6 +113,7 @@ export default {
 .home-container {
     width: 100%;
     height: 100%;
+    position: relative;
 }
 
 button {
@@ -151,7 +183,6 @@ button {
 
             h3 {
                 width: 80%;
-                text-wrap: wrap;
                 font-family: 'pressstart2p';
                 color: #f4ee80;
                 text-shadow: 1px 2px #a14759;
@@ -202,6 +233,43 @@ button {
 
     h3 {
         font-family: 'pressstart2p';
+        text-align: center;
     }
 }
+
+.popup {
+    width: 90%;
+    top: 50%;
+    left: 5%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+    background-color: #111323;
+    border: 1px solid #F5F5F5;
+    border-radius: 6px;
+    z-index: 2;
+    position: absolute;
+    padding: 25px;
+
+    & .title {
+        font-family: 'ptmono';
+        font-size: 32px;
+        color: #E5E5E5;
+    }
+    img{
+        width: 120px
+    }
+    .reject {
+        background-color: #18182E;
+        box-shadow: 0px -3px 6px #0000005C;
+        border: 1px solid #FFFFFF;
+        border-radius: 6px;
+        align-self: flex-end;
+        text-align: center;
+        margin: 0;
+        cursor: pointer;
+    }
+}
+
 </style>
