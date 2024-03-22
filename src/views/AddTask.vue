@@ -16,7 +16,7 @@
         <div class="button-container">
             <h3 class="title">Goal Category</h3>
             <div class="slider">
-                <button class="arrow prev" @click="prev"><span
+                <button v-if="getUser.goals.length>1" class="arrow prev" @click="prev"><span
                         class="material-icons">keyboard_arrow_left</span></button>
 
                 <div class="slider-slides" :style="{ transform: 'translateX(-' + currentIndex * 100 + '%)' }">
@@ -33,7 +33,7 @@
                         <h3>{{ getUser.goals[currentIndex].goalTitle }}</h3>
                     </div>
                 </div>
-                <button class="arrow next" @click="next"><span
+                <button  v-if="getUser.goals.length>1" class="arrow next" @click="next"><span
                         class="material-icons">keyboard_arrow_right</span></button>
             </div>
         </div>
@@ -87,7 +87,7 @@ export default {
             const userCollectionReference = collection(firestore, 'users');// Update the goals array using Firestore's arrayUnion method
             const userDoc = doc(userCollectionReference, this.getUser.uid)
             await updateDoc(userDoc, {
-                taks: arrayUnion({
+                tasks: arrayUnion({
                     title: this.title,
                     description:this.description,
                     goalTitle: this.getUser.goals[this.currentIndex].goalTitle,

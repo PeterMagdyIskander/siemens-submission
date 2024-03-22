@@ -12,6 +12,7 @@
             <li class="sidemenu__item" @click="closeMenu"><router-link to="/">Home</router-link></li>
             <li class="sidemenu__item" @click="closeMenu"><router-link to="/AddGoal">Add Goal</router-link></li>
             <li class="sidemenu__item" @click="closeMenu"><router-link to="/AddTask">Add Task</router-link></li>
+            <li class="sidemenu__item" @click="closeMenu"><router-link to="/MyTasks">My Tasks</router-link></li>
           </ul>
         </div>
       </nav>

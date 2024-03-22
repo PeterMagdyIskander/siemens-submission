@@ -4,19 +4,16 @@ import { collection, doc, getFirestore, onSnapshot, updateDoc, setDoc, increment
 export default createStore({
   state: {
     user: null,
-    quests: [],
     loading: false,
     failed: false,
   },
   getters: {
     getUser: (state) => state.user,
-    getQuests: (state) => state.quests,
     getLoading: (state) => state.loading,
     getFailed: (state) => state.failed
   },
   mutations: {
     setUser: (state, user) => (state.user = user),
-    setQuests: (state, quests) => (state.quests = quests),
     setLoading: (state, loading) => (state.loading = loading),
     setFailed: (state, failed) => (state.failed = failed)
   },
@@ -36,14 +33,16 @@ export default createStore({
           if (!allUsers.includes(res.user.uid)) {
             newUser = true;
             setDoc(doc(firestore, "users", res.user.uid), {
-              goal:[],
+              goals:[],
+              tasks:[],
               name: res.user.displayName,
             }, { merge: true });
 
 
             let user = {
               uid: res.user.uid,
-              goal:[],
+              goals:[],
+              tasks:[],
               name: res.user.displayName,
             }
             commit('setUser', user)
@@ -72,14 +71,6 @@ export default createStore({
     updateUser({ commit }, user) {
       commit('setUser', user);
     },
-    setQuests({ commit }) {
-      const firestore = getFirestore();
-      const questsCollectionReference = collection(firestore, 'quests');
-      onSnapshot(questsCollectionReference, snapshot => {
-        const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        commit('setQuests', data)
-      })
-    }
   },
   modules: {
   }
