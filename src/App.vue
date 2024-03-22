@@ -1,5 +1,5 @@
 <template>
-  <div id="sidemenu" v-if="getUser!=null && getUser?.role!='ADMIN'">
+  <div id="sidemenu" v-if="getUser != null && getUser?.role != 'ADMIN'">
     <button class="sidemenu__btn" v-on:click="navOpen = !navOpen" v-bind:class="{ active: navOpen }">
       <span class="top"></span>
       <span class="mid"></span>
@@ -13,6 +13,7 @@
             <li class="sidemenu__item" @click="closeMenu"><router-link to="/MyTasks">My Tasks</router-link></li>
             <li class="sidemenu__item" @click="closeMenu"><router-link to="/AddTask">Add Task</router-link></li>
             <li class="sidemenu__item" @click="closeMenu"><router-link to="/AddGoal">Add Goal</router-link></li>
+            <li class="sidemenu__item" ><button @click="logout">Logout</button></li>
           </ul>
         </div>
       </nav>
@@ -33,7 +34,12 @@ export default {
       navOpen: false,
     }
   }, methods: {
+    ...mapActions(['updateUser',]),
     closeMenu() {
+      this.navOpen = false;
+    },
+    logout() {
+      this.updateUser(null);
       this.navOpen = false;
     }
   },
@@ -52,11 +58,16 @@ body {
     color: #FFF;
   }
 }
+
 #app {
   height: 100%;
   position: relative;
 }
-
+button{
+  all: unset;
+  width: 100%;
+  text-align: center;
+}
 #sidemenu {
   text-align: center;
 
@@ -138,7 +149,7 @@ body {
     }
 
     &__item {
-      a {
+      a,button {
         font-family: 'ptmono';
         text-decoration: none;
         line-height: 1.6em;
@@ -174,12 +185,10 @@ body {
   transform: translateX(-200px);
   opacity: 0;
 }
-// a{
-//   font-family: 'ptmono';
-// }
+
 a.router-link-active {
   all: unset;
-  font-family: 'pressstart2p'!important;
+  font-family: 'pressstart2p' !important;
   color: #f4ee80 !important;
   font-size: 1.5rem;
   text-shadow: 0 3px #a14759;

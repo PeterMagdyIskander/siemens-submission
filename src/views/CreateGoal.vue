@@ -175,6 +175,7 @@ h3 {
     &-slides {
         height: 100%;
         display: flex;
+        justify-content: center;
         transition: transform 0.5s ease;
 
         &-slide {

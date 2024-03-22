@@ -1,7 +1,7 @@
 <template>
   <div>
     <button @click="signIn">
-      {{ getLoading ? "Loading..." : (getFailed ? "Please refresh!" : "Start Game") }}
+      {{ getLoading ? "Loading..." : (getFailed ? "Please refresh!" : "Log in") }}
     </button>
   </div>
 </template>
@@ -12,11 +12,10 @@ export default {
   name: "LoginPage",
   computed: mapGetters(['getUser', 'getQuests', 'getLoading', 'getFailed', mapActions]),
   methods: {
-    ...mapActions(['login', 'setQuests']),
+    ...mapActions(['login']),
     signIn() {
       if (!this.getLoading) {
         this.login();
-        this.setQuests();
       }
     }
   },
