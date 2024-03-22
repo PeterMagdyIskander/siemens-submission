@@ -71,7 +71,7 @@ export default {
         async submit() {
             const firestore = getFirestore();
             const userCollectionReference = collection(firestore, 'users');// Update the goals array using Firestore's arrayUnion method
-            const userDoc = doc(userCollectionReference, this.getUser.uid)
+            const userDoc = doc(userCollectionReference, this.getUser.id)
             await updateDoc(userDoc, {
                 goals: arrayUnion({
                     goalText: this.goalText,

@@ -40,7 +40,7 @@ export default createStore({
 
 
             let user = {
-              uid: res.user.uid,
+              id: res.user.uid,
               goals:[],
               tasks:[],
               name: res.user.displayName,
@@ -53,7 +53,7 @@ export default createStore({
           onSnapshot(userDoc, snapshot => {
             const data = snapshot.data();
             let user = {
-              uid: res.user.uid
+              id: res.user.uid
               , ...data
             }
             commit('setUser', user)

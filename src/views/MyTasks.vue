@@ -41,23 +41,24 @@
             <h3>{{ getUser.goals[currentIndex].progress }}% Done</h3>
         </div>
         <div v-if="getUser.tasks.length > 0">
-            <task-card @select="selectTask" v-for="task in tasks" :key="task.id" :title="task.title"
-                :id="task.id"></task-card>
+            <task-card @select="selectTask" @done="completeTask" v-for="task in tasks" :key="task.id"
+                :title="task.title" :id="task.id"></task-card>
         </div>
         <div class="popup" v-if="selectedTask">
-                <h3 class="title">{{ selectedTask.title }}</h3>
-                <h3 class="title">{{ selectedTask.description }}</h3>
-                <img v-if="selectedTask.difficulty==='easy'" src="@/assets/easy.svg" alt="hard">
-                <img v-if="selectedTask.difficulty==='medium'" src="@/assets/medium.svg" alt="hard">
-                <img v-if="selectedTask.difficulty==='hard'" src="@/assets/hard.svg" alt="hard">
-                <button class="reject" @click="selectedId= null">CLOSE</button>
-            
+            <h3 class="title">{{ selectedTask.title }}</h3>
+            <h3 class="title">{{ selectedTask.description }}</h3>
+            <img v-if="selectedTask.difficulty === 'easy'" src="@/assets/easy.svg" alt="hard">
+            <img v-if="selectedTask.difficulty === 'medium'" src="@/assets/medium.svg" alt="hard">
+            <img v-if="selectedTask.difficulty === 'hard'" src="@/assets/hard.svg" alt="hard">
+            <button class="reject" @click="selectedId = null">CLOSE</button>
+
         </div>
     </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import { getFirestore, collection, doc, updateDoc, getDoc } from 'firebase/firestore';
 import TaskCard from '@/components/Quest/TaskCard.vue';
 export default {
     name: "my-tasks",
@@ -105,6 +106,49 @@ export default {
         },
         selectTask(id) {
             this.selectedId = id
+        },
+        async completeTask(id) {
+            console.log(this.getUser.id)
+            try {
+                const firestore = getFirestore();
+                const usersCollectionRef = collection(firestore, 'users');
+                const userDocRef = doc(usersCollectionRef, this.getUser.id);
+                const userDocSnapshot = await getDoc(userDocRef);
+                const userData = userDocSnapshot.data();
+                console.log(userData.goals)
+                let selectedTask = null;
+                const updatedTasks = userData.tasks.map(task => {
+                    if (task.id === id) {
+                        task.done = true;
+                        selectedTask = task;
+                    }
+                    return task;
+                });
+
+                const updatedGoals = userData.goals.map(goal => {
+                    if (goal.goalTitle === selectedTask.goalTitle) {
+                        switch (selectedTask.difficulty) {
+                            case 'easy':
+                                goal.progress += 10;
+                                break;
+                            case 'medium':
+                                goal.progress += 20;
+                                break;
+                            case 'hard':
+                                goal.progress += 30;
+                                break;
+                        }
+                    }
+                    return goal;
+                });
+                await updateDoc(userDocRef, {
+                    tasks: updatedTasks,
+                    goals: updatedGoals,
+                });
+                console.log('Goal text updated successfully!');
+            } catch (error) {
+                console.error('Error updating goal text:', error);
+            }
         }
     },
 }
@@ -257,9 +301,11 @@ button {
         font-size: 32px;
         color: #E5E5E5;
     }
-    img{
+
+    img {
         width: 120px
     }
+
     .reject {
         background-color: #18182E;
         box-shadow: 0px -3px 6px #0000005C;
@@ -271,5 +317,4 @@ button {
         cursor: pointer;
     }
 }
-
 </style>
