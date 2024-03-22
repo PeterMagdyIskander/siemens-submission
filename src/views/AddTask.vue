@@ -15,34 +15,49 @@
         </div>
         <div class="button-container">
             <h3 class="title">Goal Category</h3>
-            <div class="select">
-                <p>{{ selectedCategory }}</p>
-                <span class="material-icons" @click="categoryListOpen = !categoryListOpen">keyboard_arrow_down</span>
-            </div>
-            <div class="drop-down" v-if="categoryListOpen">
-                <p v-for="(option, index) in getUser.goals" :key="index"
-                    @click="(selectedCategory = option.goalTitle, categoryListOpen = !categoryListOpen)">{{
-                option.goalTitle }}</p>
+            <div class="slider">
+                <button class="arrow prev" @click="prev"><span
+                        class="material-icons">keyboard_arrow_left</span></button>
+
+                <div class="slider-slides" :style="{ transform: 'translateX(-' + currentIndex * 100 + '%)' }">
+                    <div class="slider-slides-slide">
+                        <img src="@/assets/astro-planet.svg" alt="Image 1">
+                        <h3>{{ getUser.goals[currentIndex].goalTitle }}</h3>
+                    </div>
+                    <div class="slider-slides-slide">
+                        <img src="@/assets/dynamis-planet.svg" alt="Image 2">
+                        <h3>{{ getUser.goals[currentIndex].goalTitle }}</h3>
+                    </div>
+                    <div class="slider-slides-slide">
+                        <img src="@/assets/lumos-planet.svg" alt="Image 3">
+                        <h3>{{ getUser.goals[currentIndex].goalTitle }}</h3>
+                    </div>
+                </div>
+                <button class="arrow next" @click="next"><span
+                        class="material-icons">keyboard_arrow_right</span></button>
             </div>
         </div>
 
         <div class="button-container">
             <h3 class="title">Difficulty</h3>
 
-            <div class="navigation-section">
-                <div class="navigation-section-item">
+            <div class="difficulty">
+                <div class="difficulty-item" @click="difficulty = 'easy'" :class="{ 'selected': difficulty == 'easy' }">
                     <img src="@/assets/easy.svg" alt="attack-icon">
                 </div>
-                <div class="navigation-section-item">
+                <div class="difficulty-item" @click="difficulty = 'medium'"
+                    :class="{ 'selected': difficulty == 'medium' }">
                     <img src="@/assets/medium.svg" alt="quest-center-icon">
 
                 </div>
-                <div class="navigation-section-item">
+                <div class="difficulty-item" @click="difficulty = 'hard'" :class="{ 'selected': difficulty == 'hard' }">
                     <img src="@/assets/hard.svg" alt="my-quest-icon">
                 </div>
             </div>
         </div>
-
+        <div class="submit-container">
+            <button @click="submit" :disabled="goalText === ''" :class="{ 'disabled': goalText === '' }">SUBMIT</button>
+        </div>
     </div>
 </template>
 
@@ -54,20 +69,38 @@ export default {
     name: "create-goal",
     computed: mapGetters(['getUser', 'getLoading']),
     mounted() {
-        this.selectedCategory = this.getUser.goals[0].goalTitle
+        this.totalSlides = this.getUser.goals.length
     },
     data() {
         return {
             title: "",
             description: "",
-            selectedCategory: "",
-            categoryListOpen: false,
+            currentIndex: 0,
+            totalSlides: 0,
+            difficulty: 'easy',
+
         }
     },
     methods: {
-        submit() {
-
-        }
+        async submit() {
+            const firestore = getFirestore();
+            const userCollectionReference = collection(firestore, 'users');// Update the goals array using Firestore's arrayUnion method
+            const userDoc = doc(userCollectionReference, this.getUser.uid)
+            await updateDoc(userDoc, {
+                taks: arrayUnion({
+                    title: this.title,
+                    description:this.description,
+                    goalTitle: this.getUser.goals[this.currentIndex].goalTitle,
+                    difficulty:this.difficulty
+                })
+            });
+        },
+        next() {
+            this.currentIndex = (this.currentIndex + 1) % this.totalSlides;
+        },
+        prev() {
+            this.currentIndex = (this.currentIndex - 1 + this.totalSlides) % this.totalSlides;
+        },
     },
 }
 </script>
@@ -126,9 +159,7 @@ h3 {
         color: #E5E5E5;
     }
 
-    input,
-    select,
-    .select {
+    input {
         width: 100%;
         height: 40px;
         border: 2px solid #3E8898;
@@ -136,20 +167,87 @@ h3 {
         padding-left: 10px;
     }
 
-    .select {
-        background-color: #fff;
-        color: #000;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+    .slider {
+        width: 100%;
+        height: 250px;
+        text-align: center;
+        overflow: hidden;
         position: relative;
 
-        span {
-            position: absolute;
-            right: 0;
+        &-slides {
+            height: 100%;
+            display: flex;
+            transition: transform 0.5s ease;
+
+            &-slide {
+                min-width: 100%;
+                height: 100%;
+                flex-shrink: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+
+                img {
+                    margin-top: 25px;
+                    width: 150px;
+                    object-fit: contain;
+                }
+
+                h3 {
+                    font-family: 'pressstart2p';
+                    color: #f4ee80;
+                    text-shadow: 1px 2px #a14759;
+                    font-size: 24px;
+                }
+            }
         }
     }
 
+    .arrow {
+        all: unset;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 10px;
+        z-index: 1;
+    }
+
+    .arrow.prev {
+        left: 0;
+    }
+
+    .arrow.next {
+        right: 0;
+    }
+
+    /* Style for Google Icon */
+    .material-icons {
+        font-size: 60px;
+    }
+
+    & .difficulty {
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &-item {
+            padding: 13px;
+            cursor: pointer;
+        }
+
+        & .selected {
+            border: 2px solid #3E8898;
+            border-radius: 6px;
+        }
+    }
+}
+.submit-container {
+    width: 80%;
+    display: flex;
+    justify-content: center;
     button {
         width: 170px;
         padding: 10px;
@@ -162,25 +260,10 @@ h3 {
         cursor: pointer;
     }
 
-    & .drop-down {
-        p {
-            color: #000;
-        }
-    }
-
     & .disabled {
         background-color: #3E8898;
         color: #eee;
         cursor: unset;
-    }
-
-    & .navigation-section {
-        width: 100%;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        column-gap: 25px;
     }
 }
 </style>
