@@ -58,8 +58,8 @@
         <div class="popup" v-if="selectedTask">
             <h3 v-if="!isEditing" class="title">{{ selectedTask.title }}</h3>
             <input v-if="isEditing" type="text" placeholder="Title..." v-model="editedTitle">
-            <h3 v-if="!isEditing" class="title">{{ selectedTask.description }}</h3>
-            <input v-if="isEditing" type="text" placeholder="Description..." v-model="editedDescription">
+            <h3 v-if="!isEditing" class="title" :innerHTML="selectedTask.description"></h3>
+            <Editor v-if="isEditing" v-model="editedDescription" />
             <h3 v-if="!isEditing" class="title">{{ selectedTask.dueDate }}</h3>
             <input v-if="isEditing" type="date" :min="new Date().toISOString().split('T')[0]" max="2030-01-01" v-model="editedDueDate">
             <img v-if="!isEditing && selectedTask.difficulty === 1" src="@/assets/easy.svg" alt="easy">
@@ -92,10 +92,13 @@
 import { mapGetters } from 'vuex';
 import { getFirestore, collection, doc, updateDoc, getDoc } from 'firebase/firestore';
 import TaskCard from '@/components/Quest/TaskCard.vue';
+
+import Editor from 'primevue/editor';
 export default {
     name: "my-tasks",
     components: {
-        TaskCard
+        TaskCard,
+        Editor
     },
     computed: {
         ...mapGetters(['getUser', 'getLoading']),
@@ -504,7 +507,20 @@ button {
         margin: 0;
         cursor: pointer;
     }
-
+    ::v-deep(.p-editor-container) {
+        background-color: #252a52;
+        color: #E5E5E5;
+        border-radius: 6px;
+    }
+    ::v-deep(.ql-toolbar.ql-snow){
+        background-color: #76bbca;
+        border: 1px solid #252a52;
+        border-radius: 6px;
+    }
+    ::v-deep(.ql-container.ql-snow){
+        border: 1px solid #252a52;
+        border-radius: 6px;
+    }
     .editable {
         display: flex;
         justify-content: space-between;

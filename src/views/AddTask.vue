@@ -4,19 +4,19 @@
             <p class="logo">Siemens' Submission</p>
             <p class="title">Add Task</p>
         </div>
-        <div v-if="getUser.goals.length > 0" class="button-container">
+        <div v-if="getUser.goals.length > 0" class="input-container">
             <h3 class="title">Title</h3>
             <input type="text" v-model="title">
         </div>
-        <div v-if="getUser.goals.length > 0" class="button-container">
+        <div v-if="getUser.goals.length > 0" class="input-container">
             <h3 class="title">Description</h3>
-            <input type="text" v-model="description">
+            <Editor v-model="description" />
         </div>
-        <div v-if="getUser.goals.length > 0" class="button-container">
+        <div v-if="getUser.goals.length > 0" class="input-container">
             <h3 class="title">Due Date</h3>
             <input type="date" v-model="dueDate" max="2030-01-01" :min="new Date().toISOString().split('T')[0]">
         </div>
-        <div v-if="getUser.goals.length > 0" class="button-container">
+        <div v-if="getUser.goals.length > 0" class="input-container">
             <h3 class="title">Goal Category</h3>
             <div class="slider">
                 <button v-if="getUser.goals.length > 1" class="arrow prev" @click="prev"><span
@@ -41,7 +41,7 @@
             </div>
         </div>
 
-        <div v-if="getUser.goals.length > 0" class="button-container">
+        <div v-if="getUser.goals.length > 0" class="input-container">
             <h3 class="title">Difficulty</h3>
 
             <div class="difficulty">
@@ -72,9 +72,13 @@
 
 import { mapGetters } from 'vuex';
 import { getFirestore, collection, doc, updateDoc, arrayUnion } from 'firebase/firestore';
+import Editor from 'primevue/editor';
 export default {
     name: "create-goal",
     computed: mapGetters(['getUser', 'getLoading']),
+    components: {
+        Editor
+    },
     mounted() {
         this.totalSlides = this.getUser.goals.length
     },
@@ -211,7 +215,7 @@ h3 {
     }
 }
 
-.button-container {
+.input-container {
     width: 80%;
     display: flex;
     flex-direction: column;
@@ -233,9 +237,25 @@ h3 {
         padding-left: 10px;
         font-family: "ptmono";
         font-size: 32px;
+
         @media only screen and (max-width: 767px) {
             font-size: 18px;
         }
+    }
+
+    ::v-deep(.p-editor-container) {
+        background-color: #252a52;
+        color: #E5E5E5;
+        border-radius: 6px;
+    }
+    ::v-deep(.ql-toolbar.ql-snow){
+        background-color: #76bbca;
+        border: 1px solid #252a52;
+        border-radius: 6px;
+    }
+    ::v-deep(.ql-container.ql-snow){
+        border: 1px solid #252a52;
+        border-radius: 6px;
     }
 
     .slider {
