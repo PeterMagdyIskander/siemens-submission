@@ -4,10 +4,19 @@
             <p class="logo">Siemens' Submission</p>
             <p class="title">My Tasks</p>
         </div>
-        <button @click="showingDifficulty = 'easy'" :class="{ active: showingDifficulty === 'easy' }">Easy</button>
-        <button @click="showingDifficulty = 'medium'"
-            :class="{ active: showingDifficulty === 'medium' }">Medium</button>
-        <button @click="showingDifficulty = 'hard'" :class="{ active: showingDifficulty === 'hard' }">Hard</button>
+        <div class="options-container">
+            <div class="difficulty">
+                <button @click="showingDifficulty = 1"
+                    :class="{ active: showingDifficulty === 1 }">Easy</button>
+                <button @click="showingDifficulty = 2"
+                    :class="{ active: showingDifficulty === 2 }">Medium</button>
+                <button @click="showingDifficulty = 3"
+                    :class="{ active: showingDifficulty === 3 }">Hard</button>
+            </div>
+
+            <button @click="showDueTasks = !showDueTasks" :class="{ active: showDueTasks }">Due Today</button>
+
+        </div>
 
         <div class="slider">
             <button v-if="getUser.goals.length > 1" class="arrow prev" @click="prev"><span
@@ -42,7 +51,7 @@
         </div>
         <div v-if="getUser.tasks.length > 0">
             <task-card @select="selectTask" @done="completeTask" v-for="task in tasks" :key="task.id"
-                :title="task.title" :id="task.id"></task-card>
+                :title="task.title" :id="task.id" :showActions="true"></task-card>
         </div>
         <div class="popup" v-if="selectedTask">
             <h3 v-if="!isEditing" class="title">{{ selectedTask.title }}</h3>
@@ -51,28 +60,27 @@
             <input v-if="isEditing" type="text" placeholder="Description..." v-model="editedDescription">
             <h3 v-if="!isEditing" class="title">{{ selectedTask.dueDate }}</h3>
             <input v-if="isEditing" type="date" v-model="editedDueDate">
-            <img v-if="!isEditing && selectedTask.difficulty === 'easy'" src="@/assets/easy.svg" alt="hard">
-            <img v-if="!isEditing && selectedTask.difficulty === 'medium'" src="@/assets/medium.svg" alt="hard">
-            <img v-if="!isEditing && selectedTask.difficulty === 'hard'" src="@/assets/hard.svg" alt="hard">
+            <img v-if="!isEditing && selectedTask.difficulty === 1" src="@/assets/easy.svg" alt="easy">
+            <img v-if="!isEditing && selectedTask.difficulty === 2" src="@/assets/medium.svg" alt="medium">
+            <img v-if="!isEditing && selectedTask.difficulty === 3" src="@/assets/hard.svg" alt="hard">
             <div class="difficulty" v-if="isEditing">
-                <div class="difficulty-item" @click="editedDifficulty = 'easy'"
-                    :class="{ 'selected': editedDifficulty == 'easy' }">
+                <div class="difficulty-item" @click="editedDifficulty =1"
+                    :class="{ 'selected': editedDifficulty ==1 }">
                     <img src="@/assets/easy.svg" alt="attack-icon">
                 </div>
-                <div class="difficulty-item" @click="editedDifficulty = 'medium'"
-                    :class="{ 'selected': editedDifficulty == 'medium' }">
+                <div class="difficulty-item" @click="editedDifficulty = 2"
+                    :class="{ 'selected': editedDifficulty == 2 }">
                     <img src="@/assets/medium.svg" alt="quest-center-icon">
 
                 </div>
-                <div class="difficulty-item" @click="editedDifficulty = 'hard'"
-                    :class="{ 'selected': editedDifficulty == 'hard' }">
+                <div class="difficulty-item" @click="editedDifficulty = 3"
+                    :class="{ 'selected': editedDifficulty == 3 }">
                     <img src="@/assets/hard.svg" alt="my-quest-icon">
                 </div>
             </div>
             <button class="edit" @click="editTasks">{{ isEditing ? 'Done' : 'Edit' }}</button>
             <button class="delete" @click="removeTask">Remove</button>
             <button class="reject" @click="selectedId = null">Close</button>
-
         </div>
     </div>
 </template>
@@ -90,10 +98,18 @@ export default {
         ...mapGetters(['getUser', 'getLoading']),
 
         tasks() {
+            if (this.showDueTasks) {
+                return this.notDoneTasksBasedOnDifficulty.filter(task => task.dueDate === new Date().toISOString().split('T')[0])
+            } else {
+                return this.notDoneTasksBasedOnDifficulty
+            }
+        },
+        notDoneTasksBasedOnDifficulty() {
             return this.getUser.tasks.filter(task => task.goalTitle === this.getUser.goals[this.currentIndex].goalTitle &&
                 task.difficulty === this.showingDifficulty &&
                 !task.done)
-        },
+        }
+        ,
         doneTasks() {
             return this.getUser.tasks.filter(task => task.done)
         },
@@ -112,13 +128,14 @@ export default {
         return {
             currentIndex: 0,
             totalSlides: 0,
-            showingDifficulty: 'easy',
+            showingDifficulty: 1,
             selectedId: null,
             isEditing: false,
             editedDifficulty: '',
             editedDescription: '',
             editedTitle: '',
-            editedDueDate: ''
+            editedDueDate: '',
+            showDueTasks: false
         }
     },
     methods: {
@@ -242,7 +259,7 @@ export default {
 
 button {
     all: unset;
-    width: 80px;
+    width: fit-content;
     background-color: #444a5c;
     padding: 10px;
     font-family: 'ptmono';
@@ -467,5 +484,14 @@ button {
             border-radius: 6px;
         }
     }
+}
+
+.options-container {
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
 }
 </style>

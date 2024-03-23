@@ -4,7 +4,12 @@
             <img src="@/assets/task-dot.svg" alt="task dot">
             <p>{{ title }}</p>
         </div>
-        <div class="buttons-container">
+        <div class="difficulty" v-if="showDifficulty">
+            <img v-if="difficulty == 1" src="@/assets/easy.svg" alt="easy">
+            <img v-if="difficulty == 2" src="@/assets/medium.svg" alt="medium">
+            <img v-if="difficulty == 3" src="@/assets/hard.svg" alt="hard">
+        </div>
+        <div class="buttons-container" v-if="showActions">
             <button @click="$emit('select', id)">i</button>
             <button @click="$emit('done', id)">Done</button>
         </div>
@@ -24,6 +29,20 @@ export default {
         id: {
             type: String,
             required: true,
+        },
+        difficulty: {
+            type: Number,
+            required: false,
+        },
+        showDifficulty: {
+            type: Boolean,
+            required: false,
+            default:false
+        },
+        showActions: {
+            type: Boolean,
+            required: false,
+            default:false
         }
     },
 }

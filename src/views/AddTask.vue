@@ -46,15 +46,15 @@
             <h3 class="title">Difficulty</h3>
 
             <div class="difficulty">
-                <div class="difficulty-item" @click="difficulty = 'easy'" :class="{ 'selected': difficulty == 'easy' }">
+                <div class="difficulty-item" @click="difficulty = 1" :class="{ 'selected': difficulty == 1 }">
                     <img src="@/assets/easy.svg" alt="attack-icon">
                 </div>
-                <div class="difficulty-item" @click="difficulty = 'medium'"
-                    :class="{ 'selected': difficulty == 'medium' }">
+                <div class="difficulty-item" @click="difficulty = 2"
+                    :class="{ 'selected': difficulty == 2 }">
                     <img src="@/assets/medium.svg" alt="quest-center-icon">
 
                 </div>
-                <div class="difficulty-item" @click="difficulty = 'hard'" :class="{ 'selected': difficulty == 'hard' }">
+                <div class="difficulty-item" @click="difficulty = 3" :class="{ 'selected': difficulty == 3 }">
                     <img src="@/assets/hard.svg" alt="my-quest-icon">
                 </div>
             </div>
@@ -81,14 +81,14 @@ export default {
             description: "",
             currentIndex: 0,
             totalSlides: 0,
-            difficulty: '',
+            difficulty: 0,
             dueDate: ''
 
         }
     },
     methods: {
         async submit() {
-            if (this.title.trim() != '' && this.dueDate.trim() != '' && this.difficulty.trim() != '') {
+            if (this.title.trim() != '' && this.dueDate.trim() != '' && this.difficulty != 0) {
                 const firestore = getFirestore();
                 const userCollectionReference = collection(firestore, 'users');// Update the goals array using Firestore's arrayUnion method
                 const userDoc = doc(userCollectionReference, this.getUser.id)
@@ -107,7 +107,7 @@ export default {
                 alert("Task added successfully 🚀");
                 this.title = "";
                 this.description = "";
-                this.difficulty = "";
+                this.difficulty = 0;
                 this.dueDate = "";
             } else {
                 alert("Please fill the form before submitting!");
