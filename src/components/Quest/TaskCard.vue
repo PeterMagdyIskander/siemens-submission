@@ -86,7 +86,6 @@ p {
     }
 
     & .difficulty {
-        width: 23%;
         height: 100%;
         display: flex;
         align-items: center;
