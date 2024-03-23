@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
-import { collection, doc, getFirestore, onSnapshot, updateDoc, setDoc, increment } from 'firebase/firestore';
+import { collection, doc, getFirestore, onSnapshot, setDoc } from 'firebase/firestore';
 export default createStore({
   state: {
     user: null,

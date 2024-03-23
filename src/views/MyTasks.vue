@@ -6,12 +6,9 @@
         </div>
         <div class="options-container">
             <div class="difficulty">
-                <button @click="showingDifficulty = 1"
-                    :class="{ active: showingDifficulty === 1 }">Easy</button>
-                <button @click="showingDifficulty = 2"
-                    :class="{ active: showingDifficulty === 2 }">Medium</button>
-                <button @click="showingDifficulty = 3"
-                    :class="{ active: showingDifficulty === 3 }">Hard</button>
+                <button @click="showingDifficulty = 1" :class="{ active: showingDifficulty === 1 }">Easy</button>
+                <button @click="showingDifficulty = 2" :class="{ active: showingDifficulty === 2 }">Medium</button>
+                <button @click="showingDifficulty = 3" :class="{ active: showingDifficulty === 3 }">Hard</button>
             </div>
 
             <button @click="showDueTasks = !showDueTasks" :class="{ active: showDueTasks }">Due Today</button>
@@ -49,9 +46,14 @@
             </div>
             <h3>{{ getUser.goals[currentIndex].progress }}% Done</h3>
         </div>
-        <div v-if="getUser.tasks.length > 0">
+        <div v-if="tasks.length > 0">
             <task-card @select="selectTask" @done="completeTask" v-for="task in tasks" :key="task.id"
                 :title="task.title" :id="task.id" :showActions="true"></task-card>
+        </div>
+        <div v-else class="more-info">
+            <div class="more-info-info">
+                <h3 class="title">No tasks to show 🌟</h3>
+            </div>
         </div>
         <div class="popup" v-if="selectedTask">
             <h3 v-if="!isEditing" class="title">{{ selectedTask.title }}</h3>
@@ -64,8 +66,8 @@
             <img v-if="!isEditing && selectedTask.difficulty === 2" src="@/assets/medium.svg" alt="medium">
             <img v-if="!isEditing && selectedTask.difficulty === 3" src="@/assets/hard.svg" alt="hard">
             <div class="difficulty" v-if="isEditing">
-                <div class="difficulty-item" @click="editedDifficulty =1"
-                    :class="{ 'selected': editedDifficulty ==1 }">
+                <div class="difficulty-item" @click="editedDifficulty = 1"
+                    :class="{ 'selected': editedDifficulty == 1 }">
                     <img src="@/assets/easy.svg" alt="attack-icon">
                 </div>
                 <div class="difficulty-item" @click="editedDifficulty = 2"
@@ -82,6 +84,7 @@
             <button class="delete" @click="removeTask">Remove</button>
             <button class="reject" @click="selectedId = null">Close</button>
         </div>
+
     </div>
 </template>
 
@@ -110,9 +113,6 @@ export default {
                 !task.done)
         }
         ,
-        doneTasks() {
-            return this.getUser.tasks.filter(task => task.done)
-        },
         selectedTask() {
             if (!this.selectedId)
                 return null
@@ -122,7 +122,6 @@ export default {
     },
     mounted() {
         this.totalSlides = this.getUser.goals.length
-        console.log(this.getUser.goals)
     },
     data() {
         return {
@@ -182,11 +181,11 @@ export default {
                                 break;
                         }
                     }
-                    if(goal.progress>=100)
+                    if (goal.progress >= 100)
                         alert("🚀YOU FINISHED YOUR GOAL🚀")
                     return goal;
                 });
-                updatedGoals=updatedGoals.filter(goals=>goals.progress<100)
+                updatedGoals = updatedGoals.filter(goals => goals.progress < 100)
                 await updateDoc(userDocRef, {
                     tasks: updatedTasks,
                     goals: updatedGoals,
@@ -271,6 +270,35 @@ button {
 
 .active {
     background-color: #162041;
+}
+
+.more-info {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 20px;
+    background-color: #111323;
+    border: 1px solid #F5F5F5;
+    border-radius: 6px;
+    z-index: 0;
+    position: relative;
+    margin: 30px auto;
+
+    &-info {
+        z-index: 3;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+
+        & .title {
+            font-family: 'ptmono';
+            font-size: 18px;
+            color: #E5E5E5;
+            padding: 20px;
+        }
+    }
 }
 
 .header-container {

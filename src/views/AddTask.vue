@@ -1,27 +1,22 @@
 <template>
     <div class="home-container">
-        <!-- <div class="more-info">
-            <div class="more-info-info">
-                <h3 class="title">Starting strong is good. Finishing strong is epic 🌟</h3>
-            </div>
-        </div> -->
         <div class="header-container">
             <p class="logo">Siemens' Submission</p>
             <p class="title">Add Task</p>
         </div>
-        <div class="button-container">
+        <div v-if="getUser.goals.length > 0" class="button-container">
             <h3 class="title">Title</h3>
             <input type="text" v-model="title">
         </div>
-        <div class="button-container">
+        <div v-if="getUser.goals.length > 0" class="button-container">
             <h3 class="title">Description</h3>
             <input type="text" v-model="description">
         </div>
-        <div class="button-container">
+        <div v-if="getUser.goals.length > 0" class="button-container">
             <h3 class="title">Due Date</h3>
             <input type="date" v-model="dueDate">
         </div>
-        <div class="button-container">
+        <div v-if="getUser.goals.length > 0" class="button-container">
             <h3 class="title">Goal Category</h3>
             <div class="slider">
                 <button v-if="getUser.goals.length > 1" class="arrow prev" @click="prev"><span
@@ -46,15 +41,14 @@
             </div>
         </div>
 
-        <div class="button-container">
+        <div v-if="getUser.goals.length > 0" class="button-container">
             <h3 class="title">Difficulty</h3>
 
             <div class="difficulty">
                 <div class="difficulty-item" @click="difficulty = 1" :class="{ 'selected': difficulty == 1 }">
                     <img src="@/assets/easy.svg" alt="attack-icon">
                 </div>
-                <div class="difficulty-item" @click="difficulty = 2"
-                    :class="{ 'selected': difficulty == 2 }">
+                <div class="difficulty-item" @click="difficulty = 2" :class="{ 'selected': difficulty == 2 }">
                     <img src="@/assets/medium.svg" alt="quest-center-icon">
 
                 </div>
@@ -63,8 +57,13 @@
                 </div>
             </div>
         </div>
-        <div class="submit-container">
+        <div v-if="getUser.goals.length > 0" class="submit-container">
             <button @click="submit" :disabled="goalText === ''" :class="{ 'disabled': goalText === '' }">SUBMIT</button>
+        </div>
+        <div v-if="getUser.goals.length < 0" class="more-info">
+            <div class="more-info-info">
+                <h3 class="title">Please add a goal first 🌟</h3>
+            </div>
         </div>
     </div>
 </template>
@@ -73,6 +72,7 @@
 
 import { mapGetters } from 'vuex';
 import { getFirestore, collection, doc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { Fragment } from 'vue';
 export default {
     name: "create-goal",
     computed: mapGetters(['getUser', 'getLoading']),
@@ -140,6 +140,36 @@ h3 {
     align-items: center;
     row-gap: 30px;
 }
+
+.more-info {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 20px;
+    background-color: #111323;
+    border: 1px solid #F5F5F5;
+    border-radius: 6px;
+    z-index: 0;
+    position: relative;
+    margin: 30px auto;
+
+    &-info {
+        z-index: 3;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+
+        & .title {
+            font-family: 'ptmono';
+            font-size: 18px;
+            color: #E5E5E5;
+            padding: 20px;
+        }
+    }
+}
+
 .header-container {
     width: 100%;
     height: 150px;
@@ -161,33 +191,6 @@ h3 {
         font-family: 'pressstart2p';
         font-size: 18px;
 
-    }
-}
-.more-info {
-    width: 80%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    column-gap: 20px;
-    background-color: #111323;
-    border: 1px solid #F5F5F5;
-    border-radius: 6px;
-    z-index: 0;
-    position: relative;
-
-    &-info {
-        z-index: 3;
-        padding: 10px;
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-
-        & .title {
-            font-family: 'ptmono';
-            font-size: 18px;
-            color: #E5E5E5;
-            padding: 20px;
-        }
     }
 }
 
