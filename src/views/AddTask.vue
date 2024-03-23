@@ -1,9 +1,13 @@
 <template>
     <div class="home-container">
-        <div class="more-info">
+        <!-- <div class="more-info">
             <div class="more-info-info">
                 <h3 class="title">Starting strong is good. Finishing strong is epic 🌟</h3>
             </div>
+        </div> -->
+        <div class="header-container">
+            <p class="logo">Siemens' Submission</p>
+            <p class="title">Add Task</p>
         </div>
         <div class="button-container">
             <h3 class="title">Title</h3>
@@ -136,7 +140,29 @@ h3 {
     align-items: center;
     row-gap: 30px;
 }
+.header-container {
+    width: 100%;
+    height: 150px;
+    background-color: #162041;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    row-gap: 20px;
 
+    & .logo {
+        font-family: 'pressstart2p';
+        color: #f4ee80;
+        text-shadow: 1px 2px #a14759;
+        font-size: 14px;
+    }
+
+    & .title {
+        font-family: 'pressstart2p';
+        font-size: 18px;
+
+    }
+}
 .more-info {
     width: 80%;
     display: flex;
