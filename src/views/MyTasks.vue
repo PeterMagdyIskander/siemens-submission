@@ -19,20 +19,20 @@
             <button v-if="getUser.goals.length > 1" class="arrow prev" @click="prev"><span
                     class="material-icons">keyboard_arrow_left</span></button>
 
-            <div class="slider-slides" :style="{ transform: 'translateX(-' + currentIndex * 100 + '%)' }">
-                <div class="slider-slides-slide">
-                    <img src="@/assets/astro-planet.svg" alt="Image 1">
-                    <h3>{{ getUser.goals[currentIndex].goalText }}</h3>
+                    <div class="slides" :style="{ transform: 'translateX(-' + currentIndex * 100 + '%)' }">
+                    <div class="slide">
+                        <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
+                        <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
+                    </div>
+                    <div class="slide">
+                        <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
+                        <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
+                    </div>
+                    <div class="slide">
+                        <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
+                        <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
+                    </div>
                 </div>
-                <div class="slider-slides-slide">
-                    <img src="@/assets/dynamis-planet.svg" alt="Image 2">
-                    <h3>{{ getUser.goals[currentIndex].goalText }}</h3>
-                </div>
-                <div class="slider-slides-slide">
-                    <img src="@/assets/lumos-planet.svg" alt="Image 3">
-                    <h3>{{ getUser.goals[currentIndex].goalText }}</h3>
-                </div>
-            </div>
             <button v-if="getUser.goals.length > 1" class="arrow next" @click="next"><span
                     class="material-icons">keyboard_arrow_right</span></button>
         </div>
@@ -134,7 +134,19 @@ export default {
             editedDescription: '',
             editedTitle: '',
             editedDueDate: '',
-            showDueTasks: false
+            showDueTasks: false,
+            goals: [
+                {
+                    title: "Be Athletic",
+                    icon: "🏋️‍♂️"
+                }, {
+                    title: "Develop a skill",
+                    icon: "🛠️"
+                }, {
+                    title: "Income Increase",
+                    icon: "💰"
+                }
+            ],
         }
     },
     methods: {
@@ -149,6 +161,11 @@ export default {
         },
         selectTask(id) {
             this.selectedId = id
+        },getIcon(goalTitle) {
+            return this.goals.filter(goal => goal.title === goalTitle)[0].icon
+        },
+        getTitle(goalTitle) {
+            return this.goals.filter(goal => goal.title === goalTitle)[0].title
         },
         async completeTask(id) {
             try {
@@ -327,43 +344,40 @@ button {
 
 
 .slider {
-    width: 100%;
-    height: 250px;
-    text-align: center;
-    overflow: hidden;
-    position: relative;
+        width: 100%;
+        text-align: center;
+        overflow: hidden;
+        position: relative;
 
-    &-slides {
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        transition: transform 0.5s ease;
-
-        &-slide {
-            min-width: 100%;
+        & .slides {
             height: 100%;
-            flex-shrink: 0;
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
+            transition: transform 0.5s ease;
 
-            img {
-                margin-top: 25px;
-                width: 150px;
-                object-fit: contain;
-            }
+            & .slide {
+                min-width: 100%;
+                height: 100%;
+                flex-shrink: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
 
-            h3 {
-                width: 80%;
-                font-family: 'pressstart2p';
-                color: #f4ee80;
-                text-shadow: 1px 2px #a14759;
-                font-size: 24px;
+                .icon {
+                    margin-top: 25px;
+                    font-size: 100px;
+                    object-fit: contain;
+                }
+
+                h3 {
+                    font-family: 'pressstart2p';
+                    color: #f4ee80;
+                    text-shadow: 1px 2px #a14759;
+                    font-size: 24px;
+                }
             }
         }
     }
-}
 
 .arrow {
     all: unset;
