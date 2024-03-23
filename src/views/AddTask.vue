@@ -16,7 +16,7 @@
         <div class="button-container">
             <h3 class="title">Goal Category</h3>
             <div class="slider">
-                <button v-if="getUser.goals.length>1" class="arrow prev" @click="prev"><span
+                <button v-if="getUser.goals.length > 1" class="arrow prev" @click="prev"><span
                         class="material-icons">keyboard_arrow_left</span></button>
 
                 <div class="slider-slides" :style="{ transform: 'translateX(-' + currentIndex * 100 + '%)' }">
@@ -33,7 +33,7 @@
                         <h3>{{ getUser.goals[currentIndex].goalTitle }}</h3>
                     </div>
                 </div>
-                <button  v-if="getUser.goals.length>1" class="arrow next" @click="next"><span
+                <button v-if="getUser.goals.length > 1" class="arrow next" @click="next"><span
                         class="material-icons">keyboard_arrow_right</span></button>
             </div>
         </div>
@@ -91,10 +91,10 @@ export default {
                 tasks: arrayUnion({
                     id: newTaskId,
                     title: this.title,
-                    description:this.description,
+                    description: this.description,
                     goalTitle: this.getUser.goals[this.currentIndex].goalTitle,
-                    difficulty:this.difficulty,
-                    done:false,
+                    difficulty: this.difficulty,
+                    done: false,
                 })
             });
         },
@@ -165,9 +165,13 @@ h3 {
     input {
         width: 100%;
         height: 40px;
-        border: 2px solid #3E8898;
+        border: 2px solid #17182d;
+        color: #E5E5E5;
+        background-color: #252a52;
         border-radius: 6px;
         padding-left: 10px;
+        font-family: "ptmono";
+        font-size: 32px;
     }
 
     .slider {
@@ -248,10 +252,12 @@ h3 {
         }
     }
 }
+
 .submit-container {
     width: 80%;
     display: flex;
     justify-content: center;
+
     button {
         width: 170px;
         padding: 10px;

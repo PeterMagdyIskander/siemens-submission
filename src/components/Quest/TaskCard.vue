@@ -88,6 +88,7 @@ p {
         font-size: 16px;
         font-family: 'pressstart2p';
         cursor: pointer;
+        padding: 3px;
     }
 }
 </style>

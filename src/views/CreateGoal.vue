@@ -76,7 +76,7 @@ export default {
                 goals: arrayUnion({
                     goalText: this.goalText,
                     goalTitle: this.goalTitles[this.currentIndex],
-                    progress:0
+                    progress: 0
                 })
             });
         }
@@ -242,9 +242,13 @@ h3 {
     input {
         width: 271px;
         height: 40px;
-        border: 2px solid #3E8898;
+        border: 2px solid #17182d;
+        color: #E5E5E5;
+        background-color: #252a52;
         border-radius: 6px;
         padding-left: 10px;
+        font-family: "ptmono";
+        font-size: 32px;
     }
 
     button {

@@ -45,12 +45,31 @@
                 :title="task.title" :id="task.id"></task-card>
         </div>
         <div class="popup" v-if="selectedTask">
-            <h3 class="title">{{ selectedTask.title }}</h3>
-            <h3 class="title">{{ selectedTask.description }}</h3>
-            <img v-if="selectedTask.difficulty === 'easy'" src="@/assets/easy.svg" alt="hard">
-            <img v-if="selectedTask.difficulty === 'medium'" src="@/assets/medium.svg" alt="hard">
-            <img v-if="selectedTask.difficulty === 'hard'" src="@/assets/hard.svg" alt="hard">
-            <button class="reject" @click="selectedId = null">CLOSE</button>
+            <h3 v-if="!isEditing" class="title">{{ selectedTask.title }}</h3>
+            <input v-if="isEditing" type="text" placeholder="Title..." v-model="editedTitle">
+            <h3 v-if="!isEditing" class="title">{{ selectedTask.description }}</h3>
+            <input v-if="isEditing" type="text" placeholder="Description..." v-model="editedDescription">
+            <img v-if="!isEditing && selectedTask.difficulty === 'easy'" src="@/assets/easy.svg" alt="hard">
+            <img v-if="!isEditing && selectedTask.difficulty === 'medium'" src="@/assets/medium.svg" alt="hard">
+            <img v-if="!isEditing && selectedTask.difficulty === 'hard'" src="@/assets/hard.svg" alt="hard">
+            <div class="difficulty" v-if="isEditing">
+                <div class="difficulty-item" @click="editedDifficulty = 'easy'"
+                    :class="{ 'selected': editedDifficulty == 'easy' }">
+                    <img src="@/assets/easy.svg" alt="attack-icon">
+                </div>
+                <div class="difficulty-item" @click="editedDifficulty = 'medium'"
+                    :class="{ 'selected': editedDifficulty == 'medium' }">
+                    <img src="@/assets/medium.svg" alt="quest-center-icon">
+
+                </div>
+                <div class="difficulty-item" @click="editedDifficulty = 'hard'"
+                    :class="{ 'selected': editedDifficulty == 'hard' }">
+                    <img src="@/assets/hard.svg" alt="my-quest-icon">
+                </div>
+            </div>
+            <button class="edit" @click="editTasks">{{ isEditing ? 'Done' : 'Edit' }}</button>
+            <button class="delete" @click="removeTask">Remove</button>
+            <button class="reject" @click="selectedId = null">Close</button>
 
         </div>
     </div>
@@ -79,7 +98,8 @@ export default {
         selectedTask() {
             if (!this.selectedId)
                 return null
-            return this.tasks.filter(task => task.id === this.selectedId)[0]
+            const task = this.tasks.filter(task => task.id === this.selectedId)[0];
+            return task
         }
     },
     mounted() {
@@ -91,7 +111,11 @@ export default {
             currentIndex: 0,
             totalSlides: 0,
             showingDifficulty: 'easy',
-            selectedId: null
+            selectedId: null,
+            isEditing: false,
+            editedDifficulty: '',
+            editedDescription: '',
+            editedTitle: ''
         }
     },
     methods: {
@@ -108,7 +132,6 @@ export default {
             this.selectedId = id
         },
         async completeTask(id) {
-            console.log(this.getUser.id)
             try {
                 const firestore = getFirestore();
                 const usersCollectionRef = collection(firestore, 'users');
@@ -149,6 +172,58 @@ export default {
             } catch (error) {
                 console.error('Error updating goal text:', error);
             }
+        },
+        async removeTask() {
+            try {
+                const firestore = getFirestore();
+                const usersCollectionRef = collection(firestore, 'users');
+                const userDocRef = doc(usersCollectionRef, this.getUser.id);
+                const userDocSnapshot = await getDoc(userDocRef);
+                const userData = userDocSnapshot.data();
+                console.log(userData.goals)
+                const updatedTasks = userData.tasks.filter(task => task.id != this.selectedTask.id);
+                await updateDoc(userDocRef, {
+                    tasks: updatedTasks,
+                });
+                console.log('task deleted successfully!');
+            } catch (error) {
+                console.error('Error updating goal text:', error);
+            }
+            this.selectedId = null;
+        },
+        async editTasks() {
+            if (this.isEditing) {
+                if(this.editedTitle==''||this.editedDifficulty == '')
+                    return 
+                try {
+                    const firestore = getFirestore();
+                    const usersCollectionRef = collection(firestore, 'users');
+                    const userDocRef = doc(usersCollectionRef, this.getUser.id);
+                    const userDocSnapshot = await getDoc(userDocRef);
+                    const userData = userDocSnapshot.data();
+                    const updatedTasks = userData.tasks.map(task => {
+                        if (task.id === this.selectedTask.id) {
+                            task.description = this.editedDescription;
+                            task.title = this.editedTitle;
+                            task.difficulty = this.editedDifficulty;
+                        }
+                        return task;
+                    });
+                    console.log(updatedTasks)
+                    await updateDoc(userDocRef, {
+                        tasks: updatedTasks,
+                    });
+                    console.log('task edited successfully!');
+                } catch (error) {
+                    console.error('Error editing task', error);
+                }
+                this.selectedId = null;
+                this.editedTitle = ''
+                this.editedDescription = ''
+                this.editedDifficulty = ''
+            }
+            
+            this.isEditing = !this.isEditing;
         }
     },
 }
@@ -304,7 +379,49 @@ button {
     }
 
     img {
-        width: 120px
+        width: 120px;
+        margin-bottom: 0.5rem;
+
+        @media only screen and (max-width: 767px) {
+            width: 80px;
+        }
+    }
+
+    input {
+        width: 100%;
+        height: 40px;
+        border: 2px solid #17182d;
+        color: #E5E5E5;
+        background-color: #252a52;
+        border-radius: 6px;
+        padding-left: 10px;
+        font-family: "ptmono";
+        font-size: 32px;
+        color: #E5E5E5;
+    }
+
+    .edit {
+        background-color: #18182E;
+        box-shadow: 0px -3px 6px #0000005C;
+        border: 1px solid #FFFFFF;
+        border-radius: 6px;
+        text-align: center;
+        margin: 0;
+        cursor: pointer;
+        color: #f4ee80;
+
+    }
+
+    .delete {
+        background-color: #18182E;
+        box-shadow: 0px -3px 6px #0000005C;
+        border: 1px solid #FFFFFF;
+        border-radius: 6px;
+        text-align: center;
+        margin: 0;
+        cursor: pointer;
+        color: #a14759;
+
     }
 
     .reject {
@@ -316,6 +433,34 @@ button {
         text-align: center;
         margin: 0;
         cursor: pointer;
+    }
+
+    .editable {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .material-icons {
+            font-size: 32px;
+        }
+    }
+
+    & .difficulty {
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &-item {
+            padding: 13px;
+            cursor: pointer;
+        }
+
+        & .selected {
+            border: 2px solid #3E8898;
+            border-radius: 6px;
+        }
     }
 }
 </style>
