@@ -1,10 +1,8 @@
 <template>
     <div class="home-container">
-        <div class="header-container">
-            <p class="logo">Siemens' Submission</p>
-            <p class="title">Hi {{ getUser.name }} <span class="emojo">👋</span></p>
-        </div>
-
+        <Header :title="'Set a goal'" :emoji="'🚀'"
+            :subtitle="'Set goals. Reach. Repeat. 🌟'">
+        </Header>
         <div class="more-info">
             <div class="more-info-info">
                 <h3 class="title">Let's start by setting up a GOAL <span class="emojo">🚀</span></h3>
@@ -41,9 +39,13 @@
 
 import { mapGetters } from 'vuex';
 import { getFirestore, collection, doc, updateDoc, arrayUnion } from 'firebase/firestore';
+import Header from '@/components/Shared/Header.vue';
 export default {
     name: "create-goal",
     computed: mapGetters(['getUser', 'getLoading']),
+    components: {
+        Header
+    },
     data() {
         return {
             currentIndex: 0,
@@ -110,40 +112,6 @@ h3 {
     flex-direction: column;
     align-items: center;
     row-gap: 30px;
-}
-
-.header-container {
-    width: 100%;
-    height: 150px;
-    background-color: #162041;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    row-gap: 20px;
-    text-align: center;
-    margin-bottom: 20px;
-
-    p {
-        padding: 0;
-        margin: 0;
-    }
-
-    & .logo {
-        font-family: 'pressstart2p';
-        color: #f4ee80;
-        text-shadow: 1px 2px #a14759;
-        font-size: 14px;
-    }
-
-    & .title {
-        font-family: 'pressstart2p';
-        font-size: 18px;
-    }
-
-    & .level {
-        font-family: 'ptmono';
-    }
 }
 
 .more-info {

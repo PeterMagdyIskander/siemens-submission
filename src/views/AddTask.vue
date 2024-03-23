@@ -1,9 +1,8 @@
 <template>
     <div class="home-container">
-        <div class="header-container">
-            <p class="logo">Siemens' Submission</p>
-            <p class="title">Add Task</p>
-        </div>
+        <Header :title="'Add a task'" :emoji="'💪'"
+            :subtitle="'Rome wasn\'t built in a day 🌟'">
+        </Header>
         <div v-if="getUser.goals.length > 0" class="input-container">
             <h3 class="title">Title</h3>
             <input type="text" v-model="title">
@@ -73,11 +72,13 @@
 import { mapGetters } from 'vuex';
 import { getFirestore, collection, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import Editor from 'primevue/editor';
+import Header from '@/components/Shared/Header.vue';
 export default {
     name: "create-goal",
     computed: mapGetters(['getUser', 'getLoading']),
     components: {
-        Editor
+        Editor,
+        Header
     },
     mounted() {
         this.totalSlides = this.getUser.goals.length
@@ -188,30 +189,6 @@ h3 {
             color: #E5E5E5;
             padding: 20px;
         }
-    }
-}
-
-.header-container {
-    width: 100%;
-    height: 150px;
-    background-color: #162041;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    row-gap: 20px;
-
-    & .logo {
-        font-family: 'pressstart2p';
-        color: #f4ee80;
-        text-shadow: 1px 2px #a14759;
-        font-size: 14px;
-    }
-
-    & .title {
-        font-family: 'pressstart2p';
-        font-size: 18px;
-
     }
 }
 

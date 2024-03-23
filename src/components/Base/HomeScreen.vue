@@ -1,11 +1,8 @@
 <template>
     <div class="home-container">
-        <div class="header-container">
-            <p class="logo">Siemens' Submission</p>
-            <p class="title">Hi {{ getUser.name }} <span class="wave-sign">👋</span></p>
-            <p class="level">Your goal is to {{ getUser.goals[currentIndex].goalText }}</p>
-        </div>
-
+        <Header :title="`Hi ${getUser.name}`" :emoji="'👋'"
+            :subtitle="`Your goal is to ${getUser.goals[currentIndex].goalText}`">
+        </Header>
         <div class="slider">
             <button v-if="getUser.goals.length > 1" class="arrow prev" @click="prev"><span
                     class="material-icons">keyboard_arrow_left</span></button>
@@ -54,9 +51,12 @@
 <script>
 
 import { mapGetters } from 'vuex';
-
+import Header from '../Shared/Header.vue';
 export default {
     name: "home-screen",
+    components: {
+        Header,
+    },
     computed: mapGetters(['getUser', 'getLoading']),
     data() {
         return {
@@ -207,80 +207,41 @@ export default {
     width: 70px;
 }
 
-.header-container {
-    width: 100%;
-    height: 150px;
-    background-color: #162041;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    row-gap: 20px;
-
-    margin-bottom: 20px;
-
-    p {
-        padding: 0;
-        margin: 0;
-    }
-
-    & .logo {
-        font-family: 'pressstart2p';
-        color: #f4ee80;
-        text-shadow: 1px 2px #a14759;
-        font-size: 14px;
-    }
-
-    & .title {
-        font-family: 'pressstart2p';
-        font-size: 18px;
-    }
-
-    & .level {
-        font-family: 'ptmono';
-    }
-
-    & .wave-sign {
-        font-size: 32px;
-    }
-
-}
-
 .slider {
-        width: 100%;
-        text-align: center;
-        overflow: hidden;
-        position: relative;
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
 
-        & .slides {
+    & .slides {
+        height: 100%;
+        display: flex;
+        transition: transform 0.5s ease;
+
+        & .slide {
+            min-width: 100%;
             height: 100%;
+            flex-shrink: 0;
             display: flex;
-            transition: transform 0.5s ease;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
 
-            & .slide {
-                min-width: 100%;
-                height: 100%;
-                flex-shrink: 0;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                align-items: center;
+            .icon {
+                margin-top: 25px;
+                font-size: 100px;
+                object-fit: contain;
+            }
 
-                .icon {
-                    margin-top: 25px;
-                    font-size: 100px;
-                    object-fit: contain;
-                }
-
-                h3 {
-                    font-family: 'pressstart2p';
-                    color: #f4ee80;
-                    text-shadow: 1px 2px #a14759;
-                    font-size: 24px;
-                }
+            h3 {
+                font-family: 'pressstart2p';
+                color: #f4ee80;
+                text-shadow: 1px 2px #a14759;
+                font-size: 24px;
             }
         }
     }
+}
 
 .arrow {
     all: unset;

@@ -1,9 +1,8 @@
 <template>
     <div class="home-container">
-        <div class="header-container">
-            <p class="logo">Siemens' Submission</p>
-            <p class="title">My Tasks</p>
-        </div>
+        <Header :title="'My Tasks'" :emoji="'🗒️'"
+            :subtitle="'Done is better than perfect. 🌟'">
+        </Header>
         <div class="options-container">
             <div class="difficulty">
                 <button @click="showingDifficulty = 1" :class="{ active: showingDifficulty === 1 }">Easy</button>
@@ -92,13 +91,14 @@
 import { mapGetters } from 'vuex';
 import { getFirestore, collection, doc, updateDoc, getDoc } from 'firebase/firestore';
 import TaskCard from '@/components/Quest/TaskCard.vue';
-
+import Header from '@/components/Shared/Header.vue';
 import Editor from 'primevue/editor';
 export default {
     name: "my-tasks",
     components: {
         TaskCard,
-        Editor
+        Editor,
+        Header,
     },
     computed: {
         ...mapGetters(['getUser', 'getLoading']),
@@ -320,31 +320,6 @@ button {
         }
     }
 }
-
-.header-container {
-    width: 100%;
-    height: 150px;
-    background-color: #162041;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    row-gap: 20px;
-
-    & .logo {
-        font-family: 'pressstart2p';
-        color: #f4ee80;
-        text-shadow: 1px 2px #a14759;
-        font-size: 14px;
-    }
-
-    & .title {
-        font-family: 'pressstart2p';
-        font-size: 18px;
-
-    }
-}
-
 
 .slider {
         width: 100%;
