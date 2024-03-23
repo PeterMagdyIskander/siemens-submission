@@ -3,47 +3,49 @@
         <div class="header-container">
             <p class="logo">Siemens' Submission</p>
             <p class="title">Hi {{ getUser.name }} <span class="wave-sign">👋</span></p>
-            <p class="level">Your goal is to {{  getUser.goals[currentIndex].goalText }}</p>
+            <p class="level">Your goal is to {{ getUser.goals[currentIndex].goalText }}</p>
         </div>
 
         <div class="slider">
-            <button v-if="getUser.goals.length>1" class="arrow prev" @click="prev"><span class="material-icons">keyboard_arrow_left</span></button>
+            <button v-if="getUser.goals.length > 1" class="arrow prev" @click="prev"><span
+                    class="material-icons">keyboard_arrow_left</span></button>
 
-            <div class="slider-slides" :style="{ transform: 'translateX(-' + currentIndex * 100 + '%)' }">
-                <div class="slider-slides-slide">
-                    <img src="@/assets/astro-planet.svg" alt="Image 1">
-                    <h3>{{ getUser.goals[currentIndex].goalText }}</h3> 
+            <div class="slides" :style="{ transform: 'translateX(-' + currentIndex * 100 + '%)' }">
+                <div class="slide">
+                    <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
+                    <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
                 </div>
-                <div class="slider-slides-slide">
-                    <img src="@/assets/dynamis-planet.svg" alt="Image 2">
-                    <h3>{{ getUser.goals[currentIndex].goalText }}</h3>
+                <div class="slide">
+                    <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
+                    <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
                 </div>
-                <div class="slider-slides-slide">
-                    <img src="@/assets/lumos-planet.svg" alt="Image 3">
-                    <h3>{{ getUser.goals[currentIndex].goalText }}</h3>
+                <div class="slide">
+                    <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
+                    <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
                 </div>
             </div>
-            <button v-if="getUser.goals.length>1" class="arrow next" @click="next"><span class="material-icons">keyboard_arrow_right</span></button>
+            <button v-if="getUser.goals.length > 1" class="arrow next" @click="next"><span
+                    class="material-icons">keyboard_arrow_right</span></button>
         </div>
 
         <div class="health-section">
 
             <div class="health-section-container">
-                <div class="health-section-container-health" :style="{ width: (getUser.goals[currentIndex].progress / 100) * 100 + '%' }">
+                <div class="health-section-container-health"
+                    :style="{ width: (getUser.goals[currentIndex].progress / 100) * 100 + '%' }">
                 </div>
             </div>
-            <h3>{{ getUser.goals[currentIndex].progress  }}% Done</h3>
+            <h3>{{ getUser.goals[currentIndex].progress }}% Done</h3>
         </div>
         <div class="navigation-section">
             <div class="navigation-section-item" @click="navigateTo('/AddGoal')">
-                <img src="@/assets/attack-icon.svg" alt="attack-icon">
+                🎯
             </div>
             <div class="navigation-section-item" @click="navigateTo('/AddTask')">
-                <img src="@/assets/quest-center-icon.svg" alt="quest-center-icon">
-
+                📝
             </div>
             <div class="navigation-section-item" @click="navigateTo('/MyTasks')">
-                <img src="@/assets/my-quest-icon.svg" alt="my-quest-icon">
+                🗒️
             </div>
         </div>
     </div>
@@ -60,6 +62,18 @@ export default {
         return {
             currentIndex: 0,
             totalSlides: 0,
+            goals: [
+                {
+                    title: "Be Athletic",
+                    icon: "🏋️‍♂️"
+                }, {
+                    title: "Develop a skill",
+                    icon: "🛠️"
+                }, {
+                    title: "Income Increase",
+                    icon: "💰"
+                }
+            ],
         }
     },
     mounted() {
@@ -74,7 +88,12 @@ export default {
         },
         prev() {
             this.currentIndex = (this.currentIndex - 1 + this.totalSlides) % this.totalSlides;
+        }, getIcon(goalTitle) {
+            return this.goals.filter(goal => goal.title === goalTitle)[0].icon
         },
+        getTitle(goalTitle) {
+            return this.goals.filter(goal => goal.title === goalTitle)[0].title
+        }
     }
 }
 </script>
@@ -228,44 +247,40 @@ export default {
 }
 
 .slider {
-    width: 100%;
-    height: 250px;
-    text-align: center;
-    overflow: hidden;
-    position: relative;
+        width: 100%;
+        text-align: center;
+        overflow: hidden;
+        position: relative;
 
-    &-slides {
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        transition: transform 0.5s ease;
-
-        &-slide {
-            min-width: 100%;
+        & .slides {
             height: 100%;
-            flex-shrink: 0;
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
+            transition: transform 0.5s ease;
 
-            img {
-                margin-top: 25px;
-                width: 150px;
-                object-fit: contain;
-            }
+            & .slide {
+                min-width: 100%;
+                height: 100%;
+                flex-shrink: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
 
-            h3 {
-                width: 80%;
-                text-wrap: wrap;
-                font-family: 'pressstart2p';
-                color: #f4ee80;
-                text-shadow: 1px 2px #a14759;
-                font-size: 24px;
+                .icon {
+                    margin-top: 25px;
+                    font-size: 100px;
+                    object-fit: contain;
+                }
+
+                h3 {
+                    font-family: 'pressstart2p';
+                    color: #f4ee80;
+                    text-shadow: 1px 2px #a14759;
+                    font-size: 24px;
+                }
             }
         }
     }
-}
 
 .arrow {
     all: unset;

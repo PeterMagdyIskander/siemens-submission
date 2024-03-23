@@ -22,18 +22,18 @@
                 <button v-if="getUser.goals.length > 1" class="arrow prev" @click="prev"><span
                         class="material-icons">keyboard_arrow_left</span></button>
 
-                <div class="slider-slides" :style="{ transform: 'translateX(-' + currentIndex * 100 + '%)' }">
-                    <div class="slider-slides-slide">
-                        <img src="@/assets/astro-planet.svg" alt="Image 1">
-                        <h3>{{ getUser.goals[currentIndex].goalTitle }}</h3>
+                <div class="slides" :style="{ transform: 'translateX(-' + currentIndex * 100 + '%)' }">
+                    <div class="slide">
+                        <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
+                        <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
                     </div>
-                    <div class="slider-slides-slide">
-                        <img src="@/assets/dynamis-planet.svg" alt="Image 2">
-                        <h3>{{ getUser.goals[currentIndex].goalTitle }}</h3>
+                    <div class="slide">
+                        <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
+                        <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
                     </div>
-                    <div class="slider-slides-slide">
-                        <img src="@/assets/lumos-planet.svg" alt="Image 3">
-                        <h3>{{ getUser.goals[currentIndex].goalTitle }}</h3>
+                    <div class="slide">
+                        <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
+                        <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
                     </div>
                 </div>
                 <button v-if="getUser.goals.length > 1" class="arrow next" @click="next"><span
@@ -72,7 +72,6 @@
 
 import { mapGetters } from 'vuex';
 import { getFirestore, collection, doc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { Fragment } from 'vue';
 export default {
     name: "create-goal",
     computed: mapGetters(['getUser', 'getLoading']),
@@ -86,7 +85,19 @@ export default {
             currentIndex: 0,
             totalSlides: 0,
             difficulty: 0,
-            dueDate: ''
+            dueDate: '',
+            goals: [
+                {
+                    title: "Be Athletic",
+                    icon: "🏋️‍♂️"
+                }, {
+                    title: "Develop a skill",
+                    icon: "🛠️"
+                }, {
+                    title: "Income Increase",
+                    icon: "💰"
+                }
+            ],
 
         }
     },
@@ -123,6 +134,12 @@ export default {
         prev() {
             this.currentIndex = (this.currentIndex - 1 + this.totalSlides) % this.totalSlides;
         },
+        getIcon(goalTitle) {
+            return this.goals.filter(goal => goal.title === goalTitle)[0].icon
+        },
+        getTitle(goalTitle) {
+            return this.goals.filter(goal => goal.title === goalTitle)[0].title
+        }
     },
 }
 </script>
@@ -220,18 +237,16 @@ h3 {
 
     .slider {
         width: 100%;
-        height: 250px;
         text-align: center;
         overflow: hidden;
         position: relative;
 
-        &-slides {
+        & .slides {
             height: 100%;
             display: flex;
-            justify-content: center;
             transition: transform 0.5s ease;
 
-            &-slide {
+            & .slide {
                 min-width: 100%;
                 height: 100%;
                 flex-shrink: 0;
@@ -240,9 +255,9 @@ h3 {
                 justify-content: space-between;
                 align-items: center;
 
-                img {
+                .icon {
                     margin-top: 25px;
-                    width: 150px;
+                    font-size: 100px;
                     object-fit: contain;
                 }
 
@@ -255,6 +270,7 @@ h3 {
             }
         }
     }
+
 
     .arrow {
         all: unset;

@@ -13,18 +13,18 @@
         <div class="slider">
             <button class="arrow prev" @click="prev"><span class="material-icons">keyboard_arrow_left</span></button>
 
-            <div class="slider-slides" :style="{ transform: 'translateX(-' + currentIndex * 100 + '%)' }">
-                <div class="slider-slides-slide">
-                    <img src="@/assets/astro-planet.svg" alt="Image 1">
-                    <h3>{{ goalTitles[currentIndex] }}</h3>
+            <div class="slides" :style="{ transform: 'translateX(-' + currentIndex * 100 + '%)' }">
+                <div class="slide">
+                    <span class="icon">{{ goals[currentIndex].icon }}</span>
+                    <h3>{{ goals[currentIndex].title }}</h3>
                 </div>
-                <div class="slider-slides-slide">
-                    <img src="@/assets/dynamis-planet.svg" alt="Image 2">
-                    <h3>{{ goalTitles[currentIndex] }}</h3>
+                <div class="slide">
+                    <span class="icon">{{ goals[currentIndex].icon }}</span>
+                    <h3>{{ goals[currentIndex].title }}</h3>
                 </div>
-                <div class="slider-slides-slide">
-                    <img src="@/assets/lumos-planet.svg" alt="Image 3">
-                    <h3>{{ goalTitles[currentIndex] }}</h3>
+                <div class="slide">
+                    <span class="icon">{{ goals[currentIndex].icon }}</span>
+                    <h3>{{ goals[currentIndex].title }}</h3>
                 </div>
             </div>
             <button class="arrow next" @click="next"><span class="material-icons">keyboard_arrow_right</span></button>
@@ -49,10 +49,17 @@ export default {
             currentIndex: 0,
             totalSlides: 3,
             goalText: "",
-            goalTitles: [
-                "Be Athletic",
-                "Develop a skill",
-                "Income Increase"
+            goals: [
+                {
+                    title: "Be Athletic",
+                    icon: "🏋️‍♂️"
+                }, {
+                    title: "Develop a skill",
+                    icon: "🛠️"
+                }, {
+                    title: "Income Increase",
+                    icon: "💰"
+                }
             ],
             goalInspos: [
                 "Lose 10kg of fat.",
@@ -76,7 +83,7 @@ export default {
                 await updateDoc(userDoc, {
                     goals: arrayUnion({
                         goalText: this.goalText,
-                        goalTitle: this.goalTitles[this.currentIndex],
+                        goalTitle: this.goals[this.currentIndex].title,
                         progress: 0
                     })
                 });
@@ -173,18 +180,16 @@ h3 {
 
 .slider {
     width: 100%;
-    height: 250px;
     text-align: center;
     overflow: hidden;
     position: relative;
 
-    &-slides {
+    & .slides {
         height: 100%;
         display: flex;
-        justify-content: center;
         transition: transform 0.5s ease;
 
-        &-slide {
+        & .slide {
             min-width: 100%;
             height: 100%;
             flex-shrink: 0;
@@ -193,9 +198,9 @@ h3 {
             justify-content: space-between;
             align-items: center;
 
-            img {
+            .icon {
                 margin-top: 25px;
-                width: 150px;
+                font-size: 100px;
                 object-fit: contain;
             }
 
