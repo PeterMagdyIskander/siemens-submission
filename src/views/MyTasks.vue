@@ -168,22 +168,25 @@ export default {
                     return task;
                 });
 
-                const updatedGoals = userData.goals.map(goal => {
+                let updatedGoals = userData.goals.map(goal => {
                     if (goal.goalTitle === selectedTask.goalTitle) {
                         switch (selectedTask.difficulty) {
-                            case 'easy':
+                            case 1:
                                 goal.progress += 10;
                                 break;
-                            case 'medium':
+                            case 2:
                                 goal.progress += 20;
                                 break;
-                            case 'hard':
+                            case 3:
                                 goal.progress += 30;
                                 break;
                         }
                     }
+                    if(goal.progress>=100)
+                        alert("🚀YOU FINISHED YOUR GOAL🚀")
                     return goal;
                 });
+                updatedGoals=updatedGoals.filter(goals=>goals.progress<100)
                 await updateDoc(userDocRef, {
                     tasks: updatedTasks,
                     goals: updatedGoals,
