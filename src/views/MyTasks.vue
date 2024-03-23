@@ -49,6 +49,8 @@
             <input v-if="isEditing" type="text" placeholder="Title..." v-model="editedTitle">
             <h3 v-if="!isEditing" class="title">{{ selectedTask.description }}</h3>
             <input v-if="isEditing" type="text" placeholder="Description..." v-model="editedDescription">
+            <h3 v-if="!isEditing" class="title">{{ selectedTask.dueDate }}</h3>
+            <input v-if="isEditing" type="date" v-model="editedDueDate">
             <img v-if="!isEditing && selectedTask.difficulty === 'easy'" src="@/assets/easy.svg" alt="hard">
             <img v-if="!isEditing && selectedTask.difficulty === 'medium'" src="@/assets/medium.svg" alt="hard">
             <img v-if="!isEditing && selectedTask.difficulty === 'hard'" src="@/assets/hard.svg" alt="hard">
@@ -115,7 +117,8 @@ export default {
             isEditing: false,
             editedDifficulty: '',
             editedDescription: '',
-            editedTitle: ''
+            editedTitle: '',
+            editedDueDate: ''
         }
     },
     methods: {
@@ -193,8 +196,8 @@ export default {
         },
         async editTasks() {
             if (this.isEditing) {
-                if(this.editedTitle==''||this.editedDifficulty == '')
-                    return 
+                if (this.editedTitle == '' || this.editedDifficulty == '')
+                    return
                 try {
                     const firestore = getFirestore();
                     const usersCollectionRef = collection(firestore, 'users');
@@ -206,6 +209,7 @@ export default {
                             task.description = this.editedDescription;
                             task.title = this.editedTitle;
                             task.difficulty = this.editedDifficulty;
+                            task.dueDate = this.editedDueDate
                         }
                         return task;
                     });
@@ -221,8 +225,9 @@ export default {
                 this.editedTitle = ''
                 this.editedDescription = ''
                 this.editedDifficulty = ''
+                this.editedDueDate = ''
             }
-            
+
             this.isEditing = !this.isEditing;
         }
     },

@@ -14,6 +14,10 @@
             <input type="text" v-model="description">
         </div>
         <div class="button-container">
+            <h3 class="title">Due Date</h3>
+            <input type="date" v-model="dueDate">
+        </div>
+        <div class="button-container">
             <h3 class="title">Goal Category</h3>
             <div class="slider">
                 <button v-if="getUser.goals.length > 1" class="arrow prev" @click="prev"><span
@@ -78,6 +82,7 @@ export default {
             currentIndex: 0,
             totalSlides: 0,
             difficulty: 'easy',
+            dueDate:''
 
         }
     },
@@ -94,6 +99,7 @@ export default {
                     description: this.description,
                     goalTitle: this.getUser.goals[this.currentIndex].goalTitle,
                     difficulty: this.difficulty,
+                    dueDate:this.dueDate,
                     done: false,
                 })
             });
