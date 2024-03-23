@@ -69,16 +69,22 @@ export default {
             this.currentIndex = (this.currentIndex - 1 + this.totalSlides) % this.totalSlides;
         },
         async submit() {
-            const firestore = getFirestore();
-            const userCollectionReference = collection(firestore, 'users');// Update the goals array using Firestore's arrayUnion method
-            const userDoc = doc(userCollectionReference, this.getUser.id)
-            await updateDoc(userDoc, {
-                goals: arrayUnion({
-                    goalText: this.goalText,
-                    goalTitle: this.goalTitles[this.currentIndex],
-                    progress: 0
-                })
-            });
+            if (this.goalText.trim() != '') {
+                const firestore = getFirestore();
+                const userCollectionReference = collection(firestore, 'users');// Update the goals array using Firestore's arrayUnion method
+                const userDoc = doc(userCollectionReference, this.getUser.id)
+                await updateDoc(userDoc, {
+                    goals: arrayUnion({
+                        goalText: this.goalText,
+                        goalTitle: this.goalTitles[this.currentIndex],
+                        progress: 0
+                    })
+                });
+                alert("Goal added successfully 🚀");
+                this.goalText = ""
+            } else {
+                alert("Please add a goal before submitting!");
+            }
         }
     },
 }
@@ -240,7 +246,7 @@ h3 {
     }
 
     input {
-        width: 271px;
+        width: 80%;
         height: 40px;
         border: 2px solid #17182d;
         color: #E5E5E5;

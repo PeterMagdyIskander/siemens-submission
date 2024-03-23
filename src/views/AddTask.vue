@@ -81,28 +81,37 @@ export default {
             description: "",
             currentIndex: 0,
             totalSlides: 0,
-            difficulty: 'easy',
-            dueDate:''
+            difficulty: '',
+            dueDate: ''
 
         }
     },
     methods: {
         async submit() {
-            const firestore = getFirestore();
-            const userCollectionReference = collection(firestore, 'users');// Update the goals array using Firestore's arrayUnion method
-            const userDoc = doc(userCollectionReference, this.getUser.id)
-            const newTaskId = doc(userCollectionReference).id;
-            await updateDoc(userDoc, {
-                tasks: arrayUnion({
-                    id: newTaskId,
-                    title: this.title,
-                    description: this.description,
-                    goalTitle: this.getUser.goals[this.currentIndex].goalTitle,
-                    difficulty: this.difficulty,
-                    dueDate:this.dueDate,
-                    done: false,
-                })
-            });
+            if (this.title.trim() != '' && this.dueDate.trim() != '' && this.difficulty.trim() != '') {
+                const firestore = getFirestore();
+                const userCollectionReference = collection(firestore, 'users');// Update the goals array using Firestore's arrayUnion method
+                const userDoc = doc(userCollectionReference, this.getUser.id)
+                const newTaskId = doc(userCollectionReference).id;
+                await updateDoc(userDoc, {
+                    tasks: arrayUnion({
+                        id: newTaskId,
+                        title: this.title,
+                        description: this.description,
+                        goalTitle: this.getUser.goals[this.currentIndex].goalTitle,
+                        difficulty: this.difficulty,
+                        dueDate: this.dueDate,
+                        done: false,
+                    })
+                });
+                alert("Task added successfully 🚀");
+                this.title = "";
+                this.description = "";
+                this.difficulty = "";
+                this.dueDate = "";
+            } else {
+                alert("Please fill the form before submitting!");
+            }
         },
         next() {
             this.currentIndex = (this.currentIndex + 1) % this.totalSlides;
