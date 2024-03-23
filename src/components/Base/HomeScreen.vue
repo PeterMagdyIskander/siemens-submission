@@ -122,7 +122,7 @@ export default {
     &-separator {
         z-index: 3;
         border-left: 1px solid #fff;
-        height: 40px;
+        height: 50px;
     }
 
     &-info {

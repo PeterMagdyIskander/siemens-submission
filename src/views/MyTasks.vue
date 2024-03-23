@@ -61,7 +61,7 @@
             <h3 v-if="!isEditing" class="title">{{ selectedTask.description }}</h3>
             <input v-if="isEditing" type="text" placeholder="Description..." v-model="editedDescription">
             <h3 v-if="!isEditing" class="title">{{ selectedTask.dueDate }}</h3>
-            <input v-if="isEditing" type="date" v-model="editedDueDate">
+            <input v-if="isEditing" type="date" :min="new Date().toISOString().split('T')[0]" max="2030-01-01" v-model="editedDueDate">
             <img v-if="!isEditing && selectedTask.difficulty === 1" src="@/assets/easy.svg" alt="easy">
             <img v-if="!isEditing && selectedTask.difficulty === 2" src="@/assets/medium.svg" alt="medium">
             <img v-if="!isEditing && selectedTask.difficulty === 3" src="@/assets/hard.svg" alt="hard">
@@ -456,7 +456,7 @@ button {
 
     input {
         width: 100%;
-        height: 40px;
+        height: 50px;
         border: 2px solid #17182d;
         color: #E5E5E5;
         background-color: #252a52;
@@ -465,6 +465,9 @@ button {
         font-family: "ptmono";
         font-size: 32px;
         color: #E5E5E5;
+        @media only screen and (max-width: 767px) {
+            font-size: 18px;
+        }
     }
 
     .edit {

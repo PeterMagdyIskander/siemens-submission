@@ -241,7 +241,7 @@ button {
 
     input {
         width: 100%;
-        height: 40px;
+        height: 50px;
         border: 2px solid #17182d;
         color: #E5E5E5;
         background-color: #252a52;
@@ -250,6 +250,9 @@ button {
         font-family: "ptmono";
         font-size: 32px;
         color: #E5E5E5;
+        @media only screen and (max-width: 767px) {
+            font-size: 18px;
+        }
     }
 
     .edit {

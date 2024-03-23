@@ -252,7 +252,7 @@ h3 {
 
     input {
         width: 80%;
-        height: 40px;
+        height: 50px;
         border: 2px solid #17182d;
         color: #E5E5E5;
         background-color: #252a52;
@@ -260,6 +260,9 @@ h3 {
         padding-left: 10px;
         font-family: "ptmono";
         font-size: 32px;
+        @media only screen and (max-width: 767px) {
+            font-size: 18px;
+        }
     }
 
     button {

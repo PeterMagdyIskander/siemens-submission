@@ -14,7 +14,7 @@
         </div>
         <div v-if="getUser.goals.length > 0" class="button-container">
             <h3 class="title">Due Date</h3>
-            <input type="date" v-model="dueDate">
+            <input type="date" v-model="dueDate" max="2030-01-01" :min="new Date().toISOString().split('T')[0]">
         </div>
         <div v-if="getUser.goals.length > 0" class="button-container">
             <h3 class="title">Goal Category</h3>
@@ -225,7 +225,7 @@ h3 {
 
     input {
         width: 100%;
-        height: 40px;
+        height: 50px;
         border: 2px solid #17182d;
         color: #E5E5E5;
         background-color: #252a52;
@@ -233,6 +233,9 @@ h3 {
         padding-left: 10px;
         font-family: "ptmono";
         font-size: 32px;
+        @media only screen and (max-width: 767px) {
+            font-size: 18px;
+        }
     }
 
     .slider {
