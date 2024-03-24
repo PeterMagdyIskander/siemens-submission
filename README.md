@@ -1,6 +1,6 @@
 # Siemens Submission
 
-Welcome to Siemens Submission! This is a gamified task manager built using Vue.js and Firebase Firestore database. It allows users to manage their goals and tasks efficiently in a gamified environment.
+Welcome to my Siemens Submission! This is a gamified task manager built using Vue.js and Firebase Firestore database. It allows users to manage their goals and tasks efficiently in a gamified environment.
 
 ## Features
 
@@ -75,3 +75,7 @@ You do not need to perform steps 3 and 4 since the Firebase project keys have be
     ```
 
 6. Access the application through your web browser at `http://localhost:8080`.
+
+## Note:
+Logging in for the first time may take a while
+
