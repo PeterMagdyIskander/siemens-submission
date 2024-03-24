@@ -48,6 +48,9 @@ export default {
     methods: {
         setCurrentIndex(currentIndex) {
             this.currentIndex = currentIndex;
+        },
+        navigateTo(to) {
+            this.$router.push(to);
         }
     }
 }
