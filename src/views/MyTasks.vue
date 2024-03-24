@@ -1,7 +1,6 @@
 <template>
     <div class="home-container">
-        <Header :title="'My Tasks'" :emoji="'🗒️'"
-            :subtitle="'Done is better than perfect. 🌟'">
+        <Header :title="'My Tasks'" :emoji="'🗒️'" :subtitle="'Done is better than perfect. 🌟'">
         </Header>
         <div class="options-container">
             <div class="difficulty">
@@ -14,29 +13,29 @@
 
         </div>
 
-        <div class="slider">
+        <div v-if="getUser.goals.length > 0" class="slider">
             <button v-if="getUser.goals.length > 1" class="arrow prev" @click="prev"><span
                     class="material-icons">keyboard_arrow_left</span></button>
 
-                    <div class="slides" :style="{ transform: 'translateX(-' + currentIndex * 100 + '%)' }">
-                    <div class="slide">
-                        <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
-                        <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
-                    </div>
-                    <div class="slide">
-                        <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
-                        <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
-                    </div>
-                    <div class="slide">
-                        <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
-                        <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
-                    </div>
+            <div class="slides" :style="{ transform: 'translateX(-' + currentIndex * 100 + '%)' }">
+                <div class="slide">
+                    <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
+                    <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
                 </div>
+                <div class="slide">
+                    <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
+                    <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
+                </div>
+                <div class="slide">
+                    <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
+                    <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
+                </div>
+            </div>
             <button v-if="getUser.goals.length > 1" class="arrow next" @click="next"><span
                     class="material-icons">keyboard_arrow_right</span></button>
         </div>
 
-        <div class="health-section">
+        <div v-if="getUser.goals.length > 0" class="health-section">
 
             <div class="health-section-container">
                 <div class="health-section-container-health"
@@ -49,18 +48,16 @@
             <task-card @select="selectTask" @done="completeTask" v-for="task in tasks" :key="task.id"
                 :title="task.title" :id="task.id" :showActions="true"></task-card>
         </div>
-        <div v-else class="more-info">
-            <div class="more-info-info">
-                <h3 class="title">No tasks to show 🌟</h3>
-            </div>
-        </div>
+        <inform-user v-else :title="'No tasks to show'" :emoji="'📭'">
+        </inform-user>
         <div class="popup" v-if="selectedTask">
             <h3 v-if="!isEditing" class="title">{{ selectedTask.title }}</h3>
             <input v-if="isEditing" type="text" placeholder="Title..." v-model="editedTitle">
             <h3 v-if="!isEditing" class="title" :innerHTML="selectedTask.description"></h3>
             <Editor v-if="isEditing" v-model="editedDescription" />
             <h3 v-if="!isEditing" class="title">{{ selectedTask.dueDate }}</h3>
-            <input v-if="isEditing" type="date" :min="new Date().toISOString().split('T')[0]" max="2030-01-01" v-model="editedDueDate">
+            <input v-if="isEditing" type="date" :min="new Date().toISOString().split('T')[0]" max="2030-01-01"
+                v-model="editedDueDate">
             <img v-if="!isEditing && selectedTask.difficulty === 1" src="@/assets/easy.svg" alt="easy">
             <img v-if="!isEditing && selectedTask.difficulty === 2" src="@/assets/medium.svg" alt="medium">
             <img v-if="!isEditing && selectedTask.difficulty === 3" src="@/assets/hard.svg" alt="hard">
@@ -93,12 +90,15 @@ import { getFirestore, collection, doc, updateDoc, getDoc } from 'firebase/fires
 import TaskCard from '@/components/Quest/TaskCard.vue';
 import Header from '@/components/Shared/Header.vue';
 import Editor from 'primevue/editor';
+import InformUser from '@/components/Shared/InformUser.vue';
+
 export default {
     name: "my-tasks",
     components: {
         TaskCard,
         Editor,
         Header,
+        InformUser
     },
     computed: {
         ...mapGetters(['getUser', 'getLoading']),
@@ -164,7 +164,7 @@ export default {
         },
         selectTask(id) {
             this.selectedId = id
-        },getIcon(goalTitle) {
+        }, getIcon(goalTitle) {
             return this.goals.filter(goal => goal.title === goalTitle)[0].icon
         },
         getTitle(goalTitle) {
@@ -292,70 +292,41 @@ button {
     background-color: #162041;
 }
 
-.more-info {
-    width: 80%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    column-gap: 20px;
-    background-color: #111323;
-    border: 1px solid #F5F5F5;
-    border-radius: 6px;
-    z-index: 0;
-    position: relative;
-    margin: 30px auto;
-
-    &-info {
-        z-index: 3;
-        padding: 10px;
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-
-        & .title {
-            font-family: 'ptmono';
-            font-size: 18px;
-            color: #E5E5E5;
-            padding: 20px;
-        }
-    }
-}
-
 .slider {
-        width: 100%;
-        text-align: center;
-        overflow: hidden;
-        position: relative;
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
 
-        & .slides {
+    & .slides {
+        height: 100%;
+        display: flex;
+        transition: transform 0.5s ease;
+
+        & .slide {
+            min-width: 100%;
             height: 100%;
+            flex-shrink: 0;
             display: flex;
-            transition: transform 0.5s ease;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
 
-            & .slide {
-                min-width: 100%;
-                height: 100%;
-                flex-shrink: 0;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                align-items: center;
+            .icon {
+                margin-top: 25px;
+                font-size: 100px;
+                object-fit: contain;
+            }
 
-                .icon {
-                    margin-top: 25px;
-                    font-size: 100px;
-                    object-fit: contain;
-                }
-
-                h3 {
-                    font-family: 'pressstart2p';
-                    color: #f4ee80;
-                    text-shadow: 1px 2px #a14759;
-                    font-size: 24px;
-                }
+            h3 {
+                font-family: 'pressstart2p';
+                color: #f4ee80;
+                text-shadow: 1px 2px #a14759;
+                font-size: 24px;
             }
         }
     }
+}
 
 .arrow {
     all: unset;
@@ -443,6 +414,7 @@ button {
         font-family: "ptmono";
         font-size: 32px;
         color: #E5E5E5;
+
         @media only screen and (max-width: 767px) {
             font-size: 18px;
         }
@@ -482,20 +454,24 @@ button {
         margin: 0;
         cursor: pointer;
     }
+
     ::v-deep(.p-editor-container) {
         background-color: #252a52;
         color: #E5E5E5;
         border-radius: 6px;
     }
-    ::v-deep(.ql-toolbar.ql-snow){
+
+    ::v-deep(.ql-toolbar.ql-snow) {
         background-color: #76bbca;
         border: 1px solid #252a52;
         border-radius: 6px;
     }
-    ::v-deep(.ql-container.ql-snow){
+
+    ::v-deep(.ql-container.ql-snow) {
         border: 1px solid #252a52;
         border-radius: 6px;
     }
+
     .editable {
         display: flex;
         justify-content: space-between;

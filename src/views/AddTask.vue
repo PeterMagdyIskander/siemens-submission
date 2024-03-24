@@ -59,11 +59,8 @@
         <div v-if="getUser.goals.length > 0" class="submit-container">
             <button @click="submit" :disabled="goalText === ''" :class="{ 'disabled': goalText === '' }">SUBMIT</button>
         </div>
-        <div v-if="getUser.goals.length < 0" class="more-info">
-            <div class="more-info-info">
-                <h3 class="title">Please add a goal first 🌟</h3>
-            </div>
-        </div>
+    
+        <InformUser v-if="getUser.goals.length == 0" :title="'Please add a goal first'" :emoji="'🌟'"></InformUser>
     </div>
 </template>
 
@@ -73,12 +70,14 @@ import { mapGetters } from 'vuex';
 import { getFirestore, collection, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import Editor from 'primevue/editor';
 import Header from '@/components/Shared/Header.vue';
+import InformUser from '@/components/Shared/InformUser.vue';
 export default {
     name: "create-goal",
     computed: mapGetters(['getUser', 'getLoading']),
     components: {
         Editor,
-        Header
+        Header,
+        InformUser
     },
     mounted() {
         this.totalSlides = this.getUser.goals.length
@@ -161,35 +160,6 @@ h3 {
     flex-direction: column;
     align-items: center;
     row-gap: 30px;
-}
-
-.more-info {
-    width: 80%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    column-gap: 20px;
-    background-color: #111323;
-    border: 1px solid #F5F5F5;
-    border-radius: 6px;
-    z-index: 0;
-    position: relative;
-    margin: 30px auto;
-
-    &-info {
-        z-index: 3;
-        padding: 10px;
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-
-        & .title {
-            font-family: 'ptmono';
-            font-size: 18px;
-            color: #E5E5E5;
-            padding: 20px;
-        }
-    }
 }
 
 .input-container {

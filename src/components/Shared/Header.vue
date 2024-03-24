@@ -35,8 +35,6 @@ export default {
     justify-content: center;
     row-gap: 20px;
 
-    margin-bottom: 20px;
-
     p {
         padding: 0;
         margin: 0;

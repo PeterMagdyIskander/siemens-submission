@@ -107,58 +107,6 @@ export default {
     row-gap: 30px;
 }
 
-.more-info {
-    width: 80%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    column-gap: 20px;
-    background-color: #111323;
-    border: 1px solid #F5F5F5;
-    border-radius: 6px;
-    z-index: 0;
-    position: relative;
-
-    &-separator {
-        z-index: 3;
-        border-left: 1px solid #fff;
-        height: 50px;
-    }
-
-    &-info {
-        z-index: 3;
-        padding: 10px 0;
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-
-        & .title {
-            font-family: 'ptmono';
-            font-size: 14px;
-            color: #E5E5E5;
-        }
-
-        & .info {
-            font-family: 'pressstart2p';
-            font-size: 17px;
-            color: #E5E5E5;
-        }
-    }
-}
-
-.planet-img {
-    height: 250px;
-}
-
-.planet-title {
-    font-family: 'pressstart2p';
-
-    &.Astro {
-        font-family: 'pressstart2p';
-        color: #f4ee80;
-        text-shadow: 3px 3px #a14759;
-    }
-}
 
 .health-section {
     &-container {

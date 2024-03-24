@@ -8,11 +8,8 @@
             <task-card v-for="task in tasks" :key="task.id" :title="task.title" :id="task.id" :showDifficulty="true"
                 :difficulty="task.difficulty"></task-card>
         </div>
-        <div v-else class="more-info">
-            <div class="more-info-info">
-                <h3 class="title">You Haven't finished any tasks 🌟</h3>
-            </div>
-        </div>
+        <inform-user  v-else :title="'You Haven\'t finished any tasks'" :emoji="'🕰️'">
+        </inform-user>
     </div>
 </template>
 
@@ -20,11 +17,13 @@
 import { mapGetters } from 'vuex';
 import TaskCard from '@/components/Quest/TaskCard.vue';
 import Header from '@/components/Shared/Header.vue';
+import InformUser from '@/components/Shared/InformUser.vue';
 export default {
     name: "done-tasks",
     components: {
         TaskCard,
         Header,
+        InformUser
     },
     computed: {
         ...mapGetters(['getUser', 'getLoading']),
@@ -56,35 +55,6 @@ export default {
     width: 100%;
     height: 100%;
     position: relative;
-}
-
-.more-info {
-    width: 80%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    column-gap: 20px;
-    background-color: #111323;
-    border: 1px solid #F5F5F5;
-    border-radius: 6px;
-    z-index: 0;
-    position: relative;
-    margin: 30px auto;
-
-    &-info {
-        z-index: 3;
-        padding: 10px;
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-
-        & .title {
-            font-family: 'ptmono';
-            font-size: 18px;
-            color: #E5E5E5;
-            padding: 20px;
-        }
-    }
 }
 
 button {
