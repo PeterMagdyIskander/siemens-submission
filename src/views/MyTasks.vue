@@ -28,6 +28,7 @@
         </div>
         <inform-user v-else :title="'No tasks to show'" :emoji="'📭'">
         </inform-user>
+        <!-- this popup div could be a component but it isn't used anywhere else -->
         <div class="popup" v-if="selectedTask">
             <h3 v-if="!isEditing" class="title">{{ selectedTask.title }}</h3>
             <input v-if="isEditing" type="text" placeholder="Title..." v-model="editedTitle">

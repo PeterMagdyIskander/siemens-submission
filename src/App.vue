@@ -10,11 +10,11 @@
         <div class="sidemenu__wrapper">
           <ul class="sidemenu__list">
             <li class="sidemenu__item" @click="closeMenu"><router-link to="/">Home</router-link></li>
-            <li class="sidemenu__item" @click="closeMenu"><router-link to="/AddGoal">Add Goal</router-link></li>
-            <li class="sidemenu__item" @click="closeMenu"><router-link to="/AddTask">Add Task</router-link></li>
-            <li class="sidemenu__item" @click="closeMenu"><router-link to="/MyTasks">My Tasks</router-link></li>
-            <li class="sidemenu__item" @click="closeMenu"><router-link to="/DoneTasks">Done Tasks</router-link></li>
-            <li class="sidemenu__item" ><button @click="logout">Logout</button></li>
+            <li class="sidemenu__item" @click="closeMenu"><router-link to="/AddGoal">Set a goal</router-link></li>
+            <li class="sidemenu__item" @click="closeMenu"><router-link to="/AddTask">Add a task</router-link></li>
+            <li class="sidemenu__item" @click="closeMenu"><router-link to="/MyTasks">My tasks</router-link></li>
+            <li class="sidemenu__item" @click="closeMenu"><router-link to="/DoneTasks">Achievements</router-link></li>
+            <li class="sidemenu__item"><button @click="logout">Logout</button></li>
           </ul>
         </div>
       </nav>
@@ -64,11 +64,13 @@ body {
   height: 100%;
   position: relative;
 }
-button{
+
+button {
   all: unset;
   width: 100%;
   text-align: center;
 }
+
 #sidemenu {
   text-align: center;
 
@@ -150,7 +152,9 @@ button{
     }
 
     &__item {
-      a,button {
+
+      a,
+      button {
         font-family: 'ptmono';
         text-decoration: none;
         line-height: 1.6em;
@@ -166,6 +170,11 @@ button{
           font-size: 1.5rem;
           text-shadow: 0 3px #a14759;
         }
+      }
+
+      button {
+        width: fit-content;
+        margin: 0 auto;
       }
     }
   }
