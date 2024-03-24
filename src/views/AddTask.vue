@@ -17,27 +17,7 @@
         </div>
         <div v-if="getUser.goals.length > 0" class="input-container">
             <h3 class="title">Goal Category</h3>
-            <div class="slider">
-                <button v-if="getUser.goals.length > 1" class="arrow prev" @click="prev"><span
-                        class="material-icons">keyboard_arrow_left</span></button>
-
-                <div class="slides" :style="{ transform: 'translateX(-' + currentIndex * 100 + '%)' }">
-                    <div class="slide">
-                        <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
-                        <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
-                    </div>
-                    <div class="slide">
-                        <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
-                        <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
-                    </div>
-                    <div class="slide">
-                        <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
-                        <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
-                    </div>
-                </div>
-                <button v-if="getUser.goals.length > 1" class="arrow next" @click="next"><span
-                        class="material-icons">keyboard_arrow_right</span></button>
-            </div>
+            <slider @slide="setCurrentIndex"></slider>
         </div>
 
         <div v-if="getUser.goals.length > 0" class="input-container">
@@ -71,38 +51,23 @@ import { getFirestore, collection, doc, updateDoc, arrayUnion } from 'firebase/f
 import Editor from 'primevue/editor';
 import Header from '@/components/Shared/Header.vue';
 import InformUser from '@/components/Shared/InformUser.vue';
+import Slider from '@/components/Shared/Slider.vue'
 export default {
     name: "create-goal",
     computed: mapGetters(['getUser', 'getLoading']),
     components: {
         Editor,
         Header,
-        InformUser
-    },
-    mounted() {
-        this.totalSlides = this.getUser.goals.length
+        InformUser,
+        Slider
     },
     data() {
         return {
             title: "",
             description: "",
             currentIndex: 0,
-            totalSlides: 0,
             difficulty: 0,
             dueDate: '',
-            goals: [
-                {
-                    title: "Be Athletic",
-                    icon: "🏋️‍♂️"
-                }, {
-                    title: "Develop a skill",
-                    icon: "🛠️"
-                }, {
-                    title: "Income Increase",
-                    icon: "💰"
-                }
-            ],
-
         }
     },
     methods: {
@@ -132,17 +97,8 @@ export default {
                 alert("Please fill the form before submitting!");
             }
         },
-        next() {
-            this.currentIndex = (this.currentIndex + 1) % this.totalSlides;
-        },
-        prev() {
-            this.currentIndex = (this.currentIndex - 1 + this.totalSlides) % this.totalSlides;
-        },
-        getIcon(goalTitle) {
-            return this.goals.filter(goal => goal.title === goalTitle)[0].icon
-        },
-        getTitle(goalTitle) {
-            return this.goals.filter(goal => goal.title === goalTitle)[0].title
+        setCurrentIndex(currentIndex) {
+            this.currentIndex = currentIndex;
         }
     },
 }
@@ -205,65 +161,6 @@ h3 {
         border-radius: 6px;
     }
 
-    .slider {
-        width: 100%;
-        text-align: center;
-        overflow: hidden;
-        position: relative;
-
-        & .slides {
-            height: 100%;
-            display: flex;
-            transition: transform 0.5s ease;
-
-            & .slide {
-                min-width: 100%;
-                height: 100%;
-                flex-shrink: 0;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                align-items: center;
-
-                .icon {
-                    margin-top: 25px;
-                    font-size: 100px;
-                    object-fit: contain;
-                }
-
-                h3 {
-                    font-family: 'pressstart2p';
-                    color: #f4ee80;
-                    text-shadow: 1px 2px #a14759;
-                    font-size: 24px;
-                }
-            }
-        }
-    }
-
-
-    .arrow {
-        all: unset;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        padding: 10px;
-        z-index: 1;
-    }
-
-    .arrow.prev {
-        left: 0;
-    }
-
-    .arrow.next {
-        right: 0;
-    }
-
-    /* Style for Google Icon */
-    .material-icons {
-        font-size: 60px;
-    }
-
     & .difficulty {
         width: 100%;
         margin: 0 auto;
@@ -287,7 +184,7 @@ h3 {
     width: 80%;
     display: flex;
     justify-content: center;
-
+    margin-bottom: 15px;
     button {
         width: 170px;
         padding: 10px;

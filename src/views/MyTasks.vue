@@ -12,29 +12,7 @@
             <button @click="showDueTasks = !showDueTasks" :class="{ active: showDueTasks }">Due Today</button>
 
         </div>
-
-        <div v-if="getUser.goals.length > 0" class="slider">
-            <button v-if="getUser.goals.length > 1" class="arrow prev" @click="prev"><span
-                    class="material-icons">keyboard_arrow_left</span></button>
-
-            <div class="slides" :style="{ transform: 'translateX(-' + currentIndex * 100 + '%)' }">
-                <div class="slide">
-                    <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
-                    <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
-                </div>
-                <div class="slide">
-                    <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
-                    <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
-                </div>
-                <div class="slide">
-                    <span class="icon">{{ getIcon(getUser.goals[currentIndex].goalTitle) }}</span>
-                    <h3>{{ getTitle(getUser.goals[currentIndex].goalTitle) }}</h3>
-                </div>
-            </div>
-            <button v-if="getUser.goals.length > 1" class="arrow next" @click="next"><span
-                    class="material-icons">keyboard_arrow_right</span></button>
-        </div>
-
+       <slider v-if="getUser.goals.length > 0" @slide="setCurrentIndex"></slider>
         <div v-if="getUser.goals.length > 0" class="health-section">
 
             <div class="health-section-container">
@@ -91,14 +69,15 @@ import TaskCard from '@/components/Quest/TaskCard.vue';
 import Header from '@/components/Shared/Header.vue';
 import Editor from 'primevue/editor';
 import InformUser from '@/components/Shared/InformUser.vue';
-
+import Slider from '@/components/Shared/Slider.vue'
 export default {
     name: "my-tasks",
     components: {
         TaskCard,
         Editor,
         Header,
-        InformUser
+        InformUser,
+        Slider
     },
     computed: {
         ...mapGetters(['getUser', 'getLoading']),
@@ -123,13 +102,9 @@ export default {
             return task
         }
     },
-    mounted() {
-        this.totalSlides = this.getUser.goals.length
-    },
     data() {
         return {
             currentIndex: 0,
-            totalSlides: 0,
             showingDifficulty: 1,
             selectedId: null,
             isEditing: false,
@@ -156,19 +131,11 @@ export default {
         navigateTo(to) {
             this.$router.push(to);
         },
-        next() {
-            this.currentIndex = (this.currentIndex + 1) % this.totalSlides;
-        },
-        prev() {
-            this.currentIndex = (this.currentIndex - 1 + this.totalSlides) % this.totalSlides;
+        setCurrentIndex(currentIndex) {
+            this.currentIndex = currentIndex;
         },
         selectTask(id) {
             this.selectedId = id
-        }, getIcon(goalTitle) {
-            return this.goals.filter(goal => goal.title === goalTitle)[0].icon
-        },
-        getTitle(goalTitle) {
-            return this.goals.filter(goal => goal.title === goalTitle)[0].title
         },
         async completeTask(id) {
             try {
@@ -290,64 +257,6 @@ button {
 
 .active {
     background-color: #162041;
-}
-
-.slider {
-    width: 100%;
-    text-align: center;
-    overflow: hidden;
-    position: relative;
-
-    & .slides {
-        height: 100%;
-        display: flex;
-        transition: transform 0.5s ease;
-
-        & .slide {
-            min-width: 100%;
-            height: 100%;
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-
-            .icon {
-                margin-top: 25px;
-                font-size: 100px;
-                object-fit: contain;
-            }
-
-            h3 {
-                font-family: 'pressstart2p';
-                color: #f4ee80;
-                text-shadow: 1px 2px #a14759;
-                font-size: 24px;
-            }
-        }
-    }
-}
-
-.arrow {
-    all: unset;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    padding: 10px;
-    z-index: 1;
-}
-
-.arrow.prev {
-    left: 0;
-}
-
-.arrow.next {
-    right: 0;
-}
-
-/* Style for Google Icon */
-.material-icons {
-    font-size: 60px;
 }
 
 .health-section {

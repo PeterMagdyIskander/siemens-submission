@@ -146,6 +146,9 @@ h3 {
                 color: #f4ee80;
                 text-shadow: 1px 2px #a14759;
                 font-size: 24px;
+                @media only screen and (max-width: 767px) {
+                    font-size: 18px;
+                }
             }
         }
     }
@@ -171,6 +174,9 @@ h3 {
 /* Style for Google Icon */
 .material-icons {
     font-size: 60px;
+    @media only screen and (max-width: 767px) {
+        font-size: 30px;
+    }
 }
 
 .button-container {
