@@ -20,7 +20,7 @@ Welcome to my Siemens Submission! This is a gamified task manager built using Vu
 
 2. **Add Goals**: Start by adding your goals using the provided interface.
 
-3. **Manage Tasks**: For each goal, add tasks, edit task details, mark tasks as complete, or delete them as needed.
+3. **Manage Tasks**: For each goal, add tasks, edit task details, mark tasks as complete (easy tasks increase your progress by 10%, medium by 20% and hard by 30%), or delete them as needed.
 
 4. **Track Progress**: Monitor the progress of your goals using the progress bar provided.
 
